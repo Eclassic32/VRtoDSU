@@ -16,3 +16,7 @@ This app is ment to turn your VR controllers into virtual Joycons with Motion an
 9. Apply, save and use
 
 > To stop using the app, just close its window.
+
+## Credits
+https://github.com/v1993/cemuhook-protocol - Info about CemuHook Protocol
+https://immersive-web.github.io/ - WebXR
