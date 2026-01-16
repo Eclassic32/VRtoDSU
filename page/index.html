@@ -3,11 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  
     <title>VRtoDSU</title>
+    <style>
+        .btn-notactive {
+            color: red;
+        }
+        .btn-active {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-        <button id="xr-button" class="barebones-button" disabled>XR not found</button>
-    
+    <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center space-y-4">
+
+        <button id="xr-button" class="rounded-full bg-gray-800 px-4 py-2" disabled>XR not found</button>
+
+        <div class="flex flex-row space-x-4">
+            <div id="headset-info" class="space-y-2">
+                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+                    Headset Info
+                </div>
+                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Battery: 
+                        <span id="battery-state">Full</span>
+                        <span id="battery-level">100%</span> 
+                        <span id="battery-charging">Charged</span>
+                    </div>
+                </div>
+                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Volume Up: 
+                        <span id="volume-up-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Volume Down:
+                        <span id="volume-down-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Power: 
+                        <span id="power-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                </div>
+                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Yaw: 
+                        <span id="yaw-num">128</span> 
+                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Pitch: 
+                        <span id="pitch-num">128</span> 
+                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Roll: 
+                        <span id="roll-num">128</span> 
+                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        x: 
+                        <span id="x-num">128</span> 
+                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        y: 
+                        <span id="y-num">128</span> 
+                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        z: 
+                        <span id="z-num">128</span> 
+                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+            </div>
+
+            <div id="left-info" class="space-y-2">
+                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+                    Left Controller Info
+                </div>
+                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Battery: 
+                        <span id="battery-state">Full</span>
+                        <span id="battery-level">100%</span> 
+                        <span id="battery-charging">Charged</span>
+                    </div>
+                </div>
+                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        X: 
+                        <span id="x-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="x-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Y: 
+                        <span id="y-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="y-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Menu: 
+                        <span id="menu-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="menu-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Stick Click: 
+                        <span id="stick-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="stick-btn-pressed" class="btn-notactive">Press</span>
+                    </div>
+                    <div>
+                        Side: 
+                        <span id="side-touch" class="btn-notactive">Touch</span> 
+                        <span id="side-pressed" class="btn-notactive"></span> 
+                    </div>
+                    <div>
+                        Trigger: 
+                        <span id="trigger-touch" class="btn-notactive">Touch</span> 
+                        <span id="trigger-pressed" class="btn-notactive"></span> 
+                    </div>
+                </div>
+                <div id="axies" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Stick X: 
+                        <span id="stick-x-num">128</span> 
+                        <input type="range" name="stick-x" id="stick-x-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Stick Y: 
+                        <span id="stick-y-num">128</span> 
+                        <input type="range" name="stick-y" id="stick-y-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Trigger: 
+                        <span id="trigger-num">128</span> 
+                        <input type="range" name="trigger" id="trigger-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Grip: 
+                        <span id="grip-num">128</span> 
+                        <input type="range" name="grip" id="grip-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Yaw: 
+                        <span id="yaw-num">128</span> 
+                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Pitch: 
+                        <span id="pitch-num">128</span> 
+                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Roll: 
+                        <span id="roll-num">128</span> 
+                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        x: 
+                        <span id="x-num">128</span> 
+                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        y: 
+                        <span id="y-num">128</span> 
+                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        z: 
+                        <span id="z-num">128</span> 
+                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="rumble" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Rumble: 
+                        <span id="rumble-num">128</span> 
+                        <input type="range" name="rumble" id="rumble-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Test:
+                        <button id="rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1">Low</button>
+                        <button id="rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1">Mid</button>
+                        <button id="rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1">High</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right-info" class="space-y-2">
+                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+                    Right Controller Info
+                </div>
+                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Battery: 
+                        <span id="battery-state">Full</span>
+                        <span id="battery-level">100%</span> 
+                        <span id="battery-charging">Charged</span>
+                    </div>
+                </div>
+                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        A: 
+                        <span id="a-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="a-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        B: 
+                        <span id="b-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="b-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        System: 
+                        <span id="system-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="system-btn-pressed" class="btn-notactive">Press</span> 
+                    </div>
+                    <div>
+                        Stick Click: 
+                        <span id="stick-btn-touch" class="btn-notactive">Touch</span> 
+                        <span id="stick-btn-pressed" class="btn-notactive">Press</span>
+                    </div>
+                    <div>
+                        Side: 
+                        <span id="side-touch" class="btn-notactive">Touch</span> 
+                        <span id="side-touch" class="btn-notactive"></span> 
+                    </div>
+                    <div>
+                        Trigger: 
+                        <span id="trigger-touch" class="btn-notactive">Touch</span> 
+                        <span id="trigger-pressed" class="btn-notactive"></span> 
+                    </div>
+                </div>
+                <div id="axies" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Stick X: 
+                        <span id="stick-x-num">128</span> 
+                        <input type="range" name="stick-x" id="stick-x-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Stick Y: 
+                        <span id="stick-y-num">128</span> 
+                        <input type="range" name="stick-y" id="stick-y-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Trigger: 
+                        <span id="trigger-num">128</span> 
+                        <input type="range" name="trigger" id="trigger-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Grip: 
+                        <span id="grip-num">128</span> 
+                        <input type="range" name="grip" id="grip-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Yaw: 
+                        <span id="yaw-num">128</span> 
+                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Pitch: 
+                        <span id="pitch-num">128</span> 
+                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Roll: 
+                        <span id="roll-num">128</span> 
+                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        x: 
+                        <span id="x-num">128</span> 
+                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        y: 
+                        <span id="y-num">128</span> 
+                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        z: 
+                        <span id="z-num">128</span> 
+                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    </div>
+                </div>
+                <div id="rumble" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div>
+                        Rumble: 
+                        <span id="rumble-num">128</span> 
+                        <input type="range" name="rumble" id="rumble-range" min="0" max="255" value="128">
+                    </div>
+                    <div>
+                        Test:
+                        <button id="rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1">Low</button>
+                        <button id="rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1">Mid</button>
+                        <button id="rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1">High</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/xr.js"></script>
 </body>
 </html>
