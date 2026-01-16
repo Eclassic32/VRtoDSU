@@ -18,299 +18,305 @@
     </style>
 </head>
 <body>
-    <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center space-y-4">
+    <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center p-4">
 
-        <button id="xr-button" class="rounded-full bg-gray-800 px-4 py-2" disabled>XR not found</button>
+        <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 mb-6 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>XR not found</button>
 
-        <div class="flex flex-row space-x-4">
-            <div id="headset-info" class="space-y-2">
-                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+        <div class="flex flex-col xl:flex-row gap-4 w-full max-w-7xl">
+            <div id="headset-info" class="space-y-2 flex-1">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                     Headset Info
                 </div>
-                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div>
                         Battery: 
-                        <span id="battery-state">Full</span>
-                        <span id="battery-level">100%</span> 
-                        <span id="battery-charging">Charged</span>
+                        <span id="headset-battery-state">Full</span>
+                        <span id="headset-battery-level">100%</span> 
+                        <span id="headset-battery-charging">Charged</span>
                     </div>
                 </div>
-                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Volume Up: 
-                        <span id="volume-up-btn-pressed" class="btn-notactive">Press</span> 
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <span>Volume Up:</span>
+                        <span id="headset-volume-up-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Volume Down:
-                        <span id="volume-down-btn-pressed" class="btn-notactive">Press</span> 
+                    <div class="grid grid-cols-2 gap-2">
+                        <span>Volume Down:</span>
+                        <span id="headset-volume-down-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Power: 
-                        <span id="power-btn-pressed" class="btn-notactive">Press</span> 
-                    </div>
-                </div>
-                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Yaw: 
-                        <span id="yaw-num">128</span> 
-                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Pitch: 
-                        <span id="pitch-num">128</span> 
-                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Roll: 
-                        <span id="roll-num">128</span> 
-                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    <div class="grid grid-cols-2 gap-2">
+                        <span>Power:</span>
+                        <span id="headset-power-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
                 </div>
-                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        x: 
-                        <span id="x-num">128</span> 
-                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Yaw:</span>
+                        <span id="headset-yaw-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-yaw" id="headset-yaw-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        y: 
-                        <span id="y-num">128</span> 
-                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Pitch:</span>
+                        <span id="headset-pitch-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-pitch" id="headset-pitch-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        z: 
-                        <span id="z-num">128</span> 
-                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Roll:</span>
+                        <span id="headset-roll-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-roll" id="headset-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">x:</span>
+                        <span id="headset-x-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-x" id="headset-x-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">y:</span>
+                        <span id="headset-y-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-y" id="headset-y-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">z:</span>
+                        <span id="headset-z-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="headset-z" id="headset-z-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
             </div>
 
-            <div id="left-info" class="space-y-2">
-                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+            <div id="left-info" class="space-y-2 flex-1">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                     Left Controller Info
                 </div>
-                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div>
                         Battery: 
-                        <span id="battery-state">Full</span>
-                        <span id="battery-level">100%</span> 
-                        <span id="battery-charging">Charged</span>
+                        <span id="left-battery-state">Full</span>
+                        <span id="left-battery-level">100%</span> 
+                        <span id="left-battery-charging">Charged</span>
                     </div>
                 </div>
-                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        X: 
-                        <span id="x-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="x-btn-pressed" class="btn-notactive">Press</span> 
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>X:</span>
+                        <span id="left-x-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-x-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Y: 
-                        <span id="y-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="y-btn-pressed" class="btn-notactive">Press</span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Y:</span>
+                        <span id="left-y-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-y-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Menu: 
-                        <span id="menu-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="menu-btn-pressed" class="btn-notactive">Press</span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Menu:</span>
+                        <span id="left-menu-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-menu-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Stick Click: 
-                        <span id="stick-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="stick-btn-pressed" class="btn-notactive">Press</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Stick Click:</span>
+                        <span id="left-stick-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-stick-btn-pressed" class="btn-notactive text-center">Press</span>
                     </div>
-                    <div>
-                        Side: 
-                        <span id="side-touch" class="btn-notactive">Touch</span> 
-                        <span id="side-pressed" class="btn-notactive"></span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Side:</span>
+                        <span id="left-side-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-side-pressed" class="btn-notactive text-center"></span> 
                     </div>
-                    <div>
-                        Trigger: 
-                        <span id="trigger-touch" class="btn-notactive">Touch</span> 
-                        <span id="trigger-pressed" class="btn-notactive"></span> 
-                    </div>
-                </div>
-                <div id="axies" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Stick X: 
-                        <span id="stick-x-num">128</span> 
-                        <input type="range" name="stick-x" id="stick-x-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Stick Y: 
-                        <span id="stick-y-num">128</span> 
-                        <input type="range" name="stick-y" id="stick-y-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Trigger: 
-                        <span id="trigger-num">128</span> 
-                        <input type="range" name="trigger" id="trigger-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Grip: 
-                        <span id="grip-num">128</span> 
-                        <input type="range" name="grip" id="grip-range" min="0" max="255" value="128">
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Trigger:</span>
+                        <span id="left-trigger-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="left-trigger-pressed" class="btn-notactive text-center"></span> 
                     </div>
                 </div>
-                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Yaw: 
-                        <span id="yaw-num">128</span> 
-                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Stick X:</span>
+                        <span id="left-stick-x-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-stick-x" id="left-stick-x-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Pitch: 
-                        <span id="pitch-num">128</span> 
-                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Stick Y:</span>
+                        <span id="left-stick-y-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-stick-y" id="left-stick-y-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Roll: 
-                        <span id="roll-num">128</span> 
-                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Trigger:</span>
+                        <span id="left-trigger-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-trigger" id="left-trigger-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                </div>
-                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        x: 
-                        <span id="x-num">128</span> 
-                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        y: 
-                        <span id="y-num">128</span> 
-                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        z: 
-                        <span id="z-num">128</span> 
-                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Grip:</span>
+                        <span id="left-grip-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-grip" id="left-grip-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
-                <div id="rumble" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Rumble: 
-                        <span id="rumble-num">128</span> 
-                        <input type="range" name="rumble" id="rumble-range" min="0" max="255" value="128">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Yaw:</span>
+                        <span id="left-yaw-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-yaw" id="left-yaw-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Test:
-                        <button id="rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1">Low</button>
-                        <button id="rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1">Mid</button>
-                        <button id="rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1">High</button>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Pitch:</span>
+                        <span id="left-pitch-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-pitch" id="left-pitch-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Roll:</span>
+                        <span id="left-roll-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-roll" id="left-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">x:</span>
+                        <span id="left-x-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-x" id="left-x-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">y:</span>
+                        <span id="left-y-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-y" id="left-y-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">z:</span>
+                        <span id="left-z-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-z" id="left-z-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Rumble:</span>
+                        <span id="left-rumble-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="left-rumble" id="left-rumble-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Test:</span>
+                        <span class="w-10"></span>
+                        <div class="flex gap-2 flex-1">
+                            <button id="left-rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">Low</button>
+                            <button id="left-rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">Mid</button>
+                            <button id="left-rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">High</button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div id="right-info" class="space-y-2">
-                <div id="title" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center">
+            <div id="right-info" class="space-y-2 flex-1">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                     Right Controller Info
                 </div>
-                <div id="battery" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div>
                         Battery: 
-                        <span id="battery-state">Full</span>
-                        <span id="battery-level">100%</span> 
-                        <span id="battery-charging">Charged</span>
+                        <span id="right-battery-state">Full</span>
+                        <span id="right-battery-level">100%</span> 
+                        <span id="right-battery-charging">Charged</span>
                     </div>
                 </div>
-                <div id="buttons" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        A: 
-                        <span id="a-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="a-btn-pressed" class="btn-notactive">Press</span> 
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>A:</span>
+                        <span id="right-a-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-a-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        B: 
-                        <span id="b-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="b-btn-pressed" class="btn-notactive">Press</span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>B:</span>
+                        <span id="right-b-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-b-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        System: 
-                        <span id="system-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="system-btn-pressed" class="btn-notactive">Press</span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>System:</span>
+                        <span id="right-system-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-system-btn-pressed" class="btn-notactive text-center">Press</span> 
                     </div>
-                    <div>
-                        Stick Click: 
-                        <span id="stick-btn-touch" class="btn-notactive">Touch</span> 
-                        <span id="stick-btn-pressed" class="btn-notactive">Press</span>
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Stick Click:</span>
+                        <span id="right-stick-btn-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-stick-btn-pressed" class="btn-notactive text-center">Press</span>
                     </div>
-                    <div>
-                        Side: 
-                        <span id="side-touch" class="btn-notactive">Touch</span> 
-                        <span id="side-touch" class="btn-notactive"></span> 
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Side:</span>
+                        <span id="right-side-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-side-pressed" class="btn-notactive text-center"></span> 
                     </div>
-                    <div>
-                        Trigger: 
-                        <span id="trigger-touch" class="btn-notactive">Touch</span> 
-                        <span id="trigger-pressed" class="btn-notactive"></span> 
-                    </div>
-                </div>
-                <div id="axies" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Stick X: 
-                        <span id="stick-x-num">128</span> 
-                        <input type="range" name="stick-x" id="stick-x-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Stick Y: 
-                        <span id="stick-y-num">128</span> 
-                        <input type="range" name="stick-y" id="stick-y-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Trigger: 
-                        <span id="trigger-num">128</span> 
-                        <input type="range" name="trigger" id="trigger-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        Grip: 
-                        <span id="grip-num">128</span> 
-                        <input type="range" name="grip" id="grip-range" min="0" max="255" value="128">
+                    <div class="grid grid-cols-3 gap-2">
+                        <span>Trigger:</span>
+                        <span id="right-trigger-touch" class="btn-notactive text-center">Touch</span> 
+                        <span id="right-trigger-pressed" class="btn-notactive text-center"></span> 
                     </div>
                 </div>
-                <div id="gyro" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Yaw: 
-                        <span id="yaw-num">128</span> 
-                        <input type="range" name="yaw" id="yaw-range" min="0" max="255" value="128">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Stick X:</span>
+                        <span id="right-stick-x-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-stick-x" id="right-stick-x-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Pitch: 
-                        <span id="pitch-num">128</span> 
-                        <input type="range" name="pitch" id="pitch-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Stick Y:</span>
+                        <span id="right-stick-y-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-stick-y" id="right-stick-y-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Roll: 
-                        <span id="roll-num">128</span> 
-                        <input type="range" name="roll" id="roll-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Trigger:</span>
+                        <span id="right-trigger-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-trigger" id="right-trigger-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                </div>
-                <div id="accel" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        x: 
-                        <span id="x-num">128</span> 
-                        <input type="range" name="x" id="x-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        y: 
-                        <span id="y-num">128</span> 
-                        <input type="range" name="y" id="y-range" min="0" max="255" value="128">
-                    </div>
-                    <div>
-                        z: 
-                        <span id="z-num">128</span> 
-                        <input type="range" name="z" id="z-range" min="0" max="255" value="128">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Grip:</span>
+                        <span id="right-grip-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-grip" id="right-grip-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
-                <div id="rumble" class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Rumble: 
-                        <span id="rumble-num">128</span> 
-                        <input type="range" name="rumble" id="rumble-range" min="0" max="255" value="128">
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Yaw:</span>
+                        <span id="right-yaw-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-yaw" id="right-yaw-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
-                    <div>
-                        Test:
-                        <button id="rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1">Low</button>
-                        <button id="rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1">Mid</button>
-                        <button id="rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1">High</button>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Pitch:</span>
+                        <span id="right-pitch-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-pitch" id="right-pitch-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Roll:</span>
+                        <span id="right-roll-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-roll" id="right-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">x:</span>
+                        <span id="right-x-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-x" id="right-x-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">y:</span>
+                        <span id="right-y-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-y" id="right-y-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">z:</span>
+                        <span id="right-z-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-z" id="right-z-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                </div>
+                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Rumble:</span>
+                        <span id="right-rumble-num" class="w-10 text-right">128</span> 
+                        <input type="range" name="right-rumble" id="right-rumble-range" min="0" max="255" value="128" class="flex-1" disabled>
+                    </div>
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="w-16">Test:</span>
+                        <span class="w-10"></span>
+                        <div class="flex gap-2 flex-1">
+                            <button id="right-rumble-test-low-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">Low</button>
+                            <button id="right-rumble-test-mid-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">Mid</button>
+                            <button id="right-rumble-test-high-btn" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 flex-1">High</button>
+                        </div>
                     </div>
                 </div>
             </div>
