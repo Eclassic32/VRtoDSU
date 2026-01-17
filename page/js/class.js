@@ -73,5 +73,3 @@ class RightControllerInfo extends ControllerInfo {
         this.buttons.system = { touch: false, press: false };
     }
 }
-
-export { HeadsetInfo, LeftControllerInfo, RightControllerInfo };
