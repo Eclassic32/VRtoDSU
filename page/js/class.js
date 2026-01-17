@@ -3,7 +3,6 @@ export { HeadsetInfo, LeftControllerInfo, RightControllerInfo };
 
 class VRInfo {
     constructor() {
-        this.battery = { level: null, charging: null, state: null };
         this.gyro = { x: null, y: null, z: null };
         this.accel = { x: null, y: null, z: null };
     }

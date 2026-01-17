@@ -31,11 +31,6 @@ function testRumble(strength, device) {
 }
 
 const HeadsetInfoElements = {
-    battery: {
-        level: document.getElementById('headset-battery-level'),
-        charging: document.getElementById('headset-battery-charging'),
-        state: document.getElementById('headset-battery-state')
-    },
     buttons: {
         volUp: { pressed: document.getElementById('headset-volume-up-btn-pressed') }, 
         volDown: { pressed: document.getElementById('headset-volume-down-btn-pressed') },
@@ -72,11 +67,6 @@ const HeadsetInfoElements = {
 }
 
 const LeftControllerInfoElements = {
-    battery: {
-        level: document.getElementById('left-battery-level'),
-        charging: document.getElementById('left-battery-charging'),
-        state: document.getElementById('left-battery-state')
-    },
     buttons: {
         x: {
             touch: document.getElementById('left-x-btn-touch'), 
@@ -162,11 +152,6 @@ const LeftControllerInfoElements = {
 }
 
 const RightControllerInfoElements = {
-    battery: {
-        level: document.getElementById('right-battery-level'),
-        charging: document.getElementById('right-battery-charging'),
-        state: document.getElementById('right-battery-state')
-    },
     buttons: {
         a: {
             touch: document.getElementById('right-a-btn-touch'), 
