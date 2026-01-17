@@ -24,16 +24,25 @@ let prevTime = null;
 function initXR() {
     // Is WebXR available on this UA?
     if (navigator.xr) {
+        console.log("WebXR is available");
+        
         // If the device allows creation of exclusive sessions set it as the
         // target of the 'Enter XR' button.
         navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
             if (supported) {
+                console.log("immersive-vr supported");
                 // Updates the button to start an XR session when clicked.
                 xrButton.addEventListener('click', onButtonClicked);
                 xrButton.textContent = 'Enter VR';
                 xrButton.disabled = false;
+            } else {
+                console.log("immersive-vr NOT supported");
+                xrButton.textContent = 'VR Not Supported';
             }
         });
+    } else {
+        console.log("WebXR not available");
+        xrButton.textContent = 'WebXR Not Available';
     }
 }
 
