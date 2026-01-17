@@ -1,4 +1,5 @@
 import { setBoolValue, setRangeValue } from './elemets.js';
+export { HeadsetInfo, LeftControllerInfo, RightControllerInfo };
 
 class VRInfo {
     constructor() {
@@ -27,23 +28,29 @@ class VRInfo {
 class HeadsetInfo extends VRInfo {
     constructor() {
         super();
-        this.volUp = { pressed: false };
-        this.volDown = { pressed: false };
-        this.power = { pressed: false };
+        this.buttons = {
+            volUp : { pressed: false },
+            volDown : { pressed: false },
+            power : { pressed: false },
+        };
     }
 }
 
 class ControllerInfo extends VRInfo {
     constructor() {
         super();
-        this.stickClick = {touch: false, press: false};
-        this.sideSensor = {touch: false, press: null};
-        this.triggerSensor = {touch: false, press: null};
+        this.buttons = {
+            stickClick : {touch: false, press: false},
+            sideSensor : {touch: false, press: null},
+            triggerSensor : {touch: false, press: null}
+        }
 
-        this.stickX = 128;
-        this.stickY = 128;
-        this.trigger = 0;
-        this.grip = 0;
+        this.axis = {
+            stickX : 128,
+            stickY : 128,
+            trigger : 0,
+            grip : 0
+        };
 
         this.rumble = 0;
     }
@@ -52,18 +59,18 @@ class ControllerInfo extends VRInfo {
 class LeftControllerInfo extends ControllerInfo {
     constructor() {
         super();
-        this.x = { touch: false, press: false };
-        this.y = { touch: false, press: false };
-        this.menu = { touch: false, press: false };
+        this.buttons.x = { touch: false, press: false };
+        this.buttons.y = { touch: false, press: false };
+        this.buttons.menu = { touch: false, press: false };
     }
 }
 
 class RightControllerInfo extends ControllerInfo {
     constructor() {
         super();
-        this.a = { touch: false, press: false };
-        this.b = { touch: false, press: false };
-        this.system = { touch: false, press: false };
+        this.buttons.a = { touch: false, press: false };
+        this.buttons.b = { touch: false, press: false };
+        this.buttons.system = { touch: false, press: false };
     }
 }
 
