@@ -27,7 +27,7 @@ function testRumble(strength, device) {
             break;
     }
 
-    // Send rumble command to the device
+    // FIX: Send rumble command to the device
 }
 
 const HeadsetInfoElements = {
@@ -99,7 +99,7 @@ const LeftControllerInfoElements = {
             pressed: document.getElementById('left-trigger-pressed')
         }
     },
-    axsis: {
+    axis: {
         stickX: {
             num: document.getElementById('left-stick-x-num'),
             range: document.getElementById('left-stick-x-range')
@@ -185,7 +185,7 @@ const RightControllerInfoElements = {
             pressed: document.getElementById('right-trigger-pressed')
         }
     },
-    axsis: {
+    axis: {
         stickX: {
             num: document.getElementById('right-stick-x-num'),
             range: document.getElementById('right-stick-x-range')
