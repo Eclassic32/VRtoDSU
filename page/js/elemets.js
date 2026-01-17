@@ -90,6 +90,10 @@ const LeftControllerInfoElements = {
             touch: document.getElementById('left-menu-btn-touch'), 
             pressed: document.getElementById('left-menu-btn-pressed')
         },
+        stickClick: {
+            touch: document.getElementById('left-stick-btn-touch'),
+            pressed: document.getElementById('left-stick-btn-pressed')
+        },
         side: {
             touch: document.getElementById('left-side-touch'), 
             pressed: document.getElementById('left-side-pressed')
@@ -175,6 +179,10 @@ const RightControllerInfoElements = {
         system: {
             touch: document.getElementById('right-system-btn-touch'), 
             pressed: document.getElementById('right-system-btn-pressed')
+        },
+        stickClick: {
+            touch: document.getElementById('right-stick-btn-touch'),
+            pressed: document.getElementById('right-stick-btn-pressed')
         },
         side: {
             touch: document.getElementById('right-side-touch'), 
