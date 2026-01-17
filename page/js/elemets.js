@@ -94,9 +94,9 @@ const LeftControllerInfoElements = {
             touch: document.getElementById('left-stick-btn-touch'),
             pressed: document.getElementById('left-stick-btn-pressed')
         },
-        side: {
-            touch: document.getElementById('left-side-touch'), 
-            pressed: document.getElementById('left-side-pressed')
+        surface: {
+            touch: document.getElementById('left-surface-touch'), 
+            pressed: document.getElementById('left-surface-pressed')
         },
         trigger: {
             touch: document.getElementById('left-trigger-touch'), 
@@ -184,9 +184,9 @@ const RightControllerInfoElements = {
             touch: document.getElementById('right-stick-btn-touch'),
             pressed: document.getElementById('right-stick-btn-pressed')
         },
-        side: {
-            touch: document.getElementById('right-side-touch'), 
-            pressed: document.getElementById('right-side-pressed')
+        surface: {
+            touch: document.getElementById('right-surface-touch'), 
+            pressed: document.getElementById('right-surface-pressed')
         },
         trigger: {
             touch: document.getElementById('right-trigger-touch'), 

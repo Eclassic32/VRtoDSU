@@ -41,8 +41,8 @@ class ControllerInfo extends VRInfo {
         super();
         this.buttons = {
             stickClick : {touch: false, press: false},
-            sideSensor : {touch: false, press: null},
-            triggerSensor : {touch: false, press: null}
+            surface : {touch: false, press: null},
+            trigger : {touch: false, press: null}
         }
 
         this.axis = {
@@ -61,7 +61,7 @@ class LeftControllerInfo extends ControllerInfo {
         super();
         this.buttons.x = { touch: false, press: false };
         this.buttons.y = { touch: false, press: false };
-        this.buttons.menu = { touch: false, press: false };
+        this.buttons.menu = { touch: null, press: false };
     }
 }
 
@@ -70,6 +70,6 @@ class RightControllerInfo extends ControllerInfo {
         super();
         this.buttons.a = { touch: false, press: false };
         this.buttons.b = { touch: false, press: false };
-        this.buttons.system = { touch: false, press: false };
+        this.buttons.system = { touch: null, press: false };
     }
 }

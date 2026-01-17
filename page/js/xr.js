@@ -1,5 +1,5 @@
-import { setBoolValue, setRangeValue, 
-         HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements } from './elemets.js';
+import { headsetInfo, leftControllerInfo, rightControllerInfo,
+         HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements } from './main.js';
 
 // XR globals.
 let xrButton = document.getElementById('xr-button');
@@ -153,9 +153,9 @@ function updateHeadsetOrientation(pose) {
     const pitch = clamp(mapRange(euler.pitch, -90, 90, 0, 255), 0, 255);
     const roll = clamp(mapRange(euler.roll, -180, 180, 0, 255), 0, 255);
     
-    setRangeValue(yaw, HeadsetInfoElements.gyro.yaw);
-    setRangeValue(pitch, HeadsetInfoElements.gyro.pitch);
-    setRangeValue(roll, HeadsetInfoElements.gyro.roll);
+    headsetInfo.setValue('yaw', yaw, HeadsetInfoElements.gyro, 'range');
+    headsetInfo.setValue('pitch', pitch, HeadsetInfoElements.gyro, 'range');
+    headsetInfo.setValue('roll', roll, HeadsetInfoElements.gyro, 'range');
     
     // Calculate acceleration from position changes
     if (pose.transform.position) {
@@ -168,9 +168,9 @@ function updateHeadsetOrientation(pose) {
                 const ay = clamp(mapRange((pos.y - prevHeadsetPosition.y) / dt, -2, 2, 0, 255), 0, 255);
                 const az = clamp(mapRange((pos.z - prevHeadsetPosition.z) / dt, -2, 2, 0, 255), 0, 255);
                 
-                setRangeValue(ax, HeadsetInfoElements.accel.x);
-                setRangeValue(ay, HeadsetInfoElements.accel.y);
-                setRangeValue(az, HeadsetInfoElements.accel.z);
+                headsetInfo.setValue('x', ax, HeadsetInfoElements.accel, 'range');
+                headsetInfo.setValue('y', ay, HeadsetInfoElements.accel, 'range');
+                headsetInfo.setValue('z', az, HeadsetInfoElements.accel, 'range');
             }
         }
         prevHeadsetPosition = { x: pos.x, y: pos.y, z: pos.z };
@@ -178,7 +178,7 @@ function updateHeadsetOrientation(pose) {
 }
 
 // Update controller orientation display
-function updateControllerOrientation(pose, elements, prevOrientation, prevPosition) {
+function updateControllerOrientation(pose, elements, controllerInfo, prevOrientation, prevPosition) {
     if (!pose || !pose.transform) return { orientation: prevOrientation, position: prevPosition };
     
     const orientation = pose.transform.orientation;
@@ -189,9 +189,9 @@ function updateControllerOrientation(pose, elements, prevOrientation, prevPositi
     const pitch = clamp(mapRange(euler.pitch, -90, 90, 0, 255), 0, 255);
     const roll = clamp(mapRange(euler.roll, -180, 180, 0, 255), 0, 255);
     
-    setRangeValue(yaw, elements.gyro.yaw);
-    setRangeValue(pitch, elements.gyro.pitch);
-    setRangeValue(roll, elements.gyro.roll);
+    controllerInfo.setValue('yaw', yaw, elements.gyro, 'range');
+    controllerInfo.setValue('pitch', pitch, elements.gyro, 'range');
+    controllerInfo.setValue('roll', roll, elements.gyro, 'range');
     
     // Calculate acceleration from position changes
     if (pose.transform.position) {
@@ -203,9 +203,9 @@ function updateControllerOrientation(pose, elements, prevOrientation, prevPositi
                 const ay = clamp(mapRange((pos.y - prevPosition.y) / dt, -2, 2, 0, 255), 0, 255);
                 const az = clamp(mapRange((pos.z - prevPosition.z) / dt, -2, 2, 0, 255), 0, 255);
                 
-                setRangeValue(ax, elements.accel.x);
-                setRangeValue(ay, elements.accel.y);
-                setRangeValue(az, elements.accel.z);
+                controllerInfo.setValue('x', ax, elements.accel, 'range');
+                controllerInfo.setValue('y', ay, elements.accel, 'range');
+                controllerInfo.setValue('z', az, elements.accel, 'range');
             }
         }
         return { 
@@ -218,7 +218,7 @@ function updateControllerOrientation(pose, elements, prevOrientation, prevPositi
 }
 
 // Update controller buttons and axes
-function updateController(inputSource, frame, elements, isLeft) {
+function updateController(inputSource, frame, elements, controllerInfo, isLeft) {
     const gamepad = inputSource.gamepad;
     if (!gamepad) return;
     
@@ -227,11 +227,11 @@ function updateController(inputSource, frame, elements, isLeft) {
     if (gripSpace) {
         const pose = frame.getPose(gripSpace, xrRefSpace);
         if (isLeft) {
-            const result = updateControllerOrientation(pose, elements, prevLeftControllerOrientation, prevLeftControllerPosition);
+            const result = updateControllerOrientation(pose, elements, controllerInfo, prevLeftControllerOrientation, prevLeftControllerPosition);
             prevLeftControllerOrientation = result.orientation;
             prevLeftControllerPosition = result.position;
         } else {
-            const result = updateControllerOrientation(pose, elements, prevRightControllerOrientation, prevRightControllerPosition);
+            const result = updateControllerOrientation(pose, elements, controllerInfo, prevRightControllerOrientation, prevRightControllerPosition);
             prevRightControllerOrientation = result.orientation;
             prevRightControllerPosition = result.position;
         }
@@ -248,8 +248,8 @@ function updateController(inputSource, frame, elements, isLeft) {
         const mappedStickX = clamp(mapRange(stickX, -1, 1, 0, 255), 0, 255);
         const mappedStickY = clamp(mapRange(stickY, -1, 1, 0, 255), 0, 255);
         
-        setRangeValue(mappedStickX, elements.axis.stickX);
-        setRangeValue(mappedStickY, elements.axis.stickY);
+        controllerInfo.setValue('stickX', mappedStickX, elements.axis, 'range');
+        controllerInfo.setValue('stickY', mappedStickY, elements.axis, 'range');
     }
     
     // Update buttons
@@ -260,59 +260,48 @@ function updateController(inputSource, frame, elements, isLeft) {
     // 3: Thumbstick click
     // 4: A/X button
     // 5: B/Y button
-    // 6: Menu/System button (if available)
+    // 6: Surface touch (capacitive sensor on controller body) / Menu-System press
     
     if (gamepad.buttons.length > 0) {
         // Trigger (button 0)
         const triggerValue = clamp(Math.round(gamepad.buttons[0].value * 255), 0, 255);
-        setRangeValue(triggerValue, elements.axis.trigger);
-        if (elements.buttons.trigger) {
-            setBoolValue(gamepad.buttons[0].touched, elements.buttons.trigger.touch);
-        }
+        controllerInfo.setValue('trigger', triggerValue, elements.axis, 'range');
+        controllerInfo.setValue('touch', gamepad.buttons[0].touched, elements.buttons.trigger, 'bool');
     }
     
     if (gamepad.buttons.length > 1) {
-        // Grip (button 1)
+        // Grip (button 1) - axis value only
         const gripValue = clamp(Math.round(gamepad.buttons[1].value * 255), 0, 255);
-        setRangeValue(gripValue, elements.axis.grip);
-        if (elements.buttons.side) {
-            setBoolValue(gamepad.buttons[1].touched, elements.buttons.side.touch);
-        }
+        controllerInfo.setValue('grip', gripValue, elements.axis, 'range');
     }
     
     if (gamepad.buttons.length > 3) {
         // Thumbstick click (button 3)
-        if (elements.buttons.stickClick) {
-            setBoolValue(gamepad.buttons[3].touched, elements.buttons.stickClick.touch);
-            setBoolValue(gamepad.buttons[3].pressed, elements.buttons.stickClick.pressed);
-        }
+        controllerInfo.setValue('touch', gamepad.buttons[3].touched, elements.buttons.stickClick, 'bool');
+        controllerInfo.setValue('pressed', gamepad.buttons[3].pressed, elements.buttons.stickClick, 'bool');
     }
     
     if (gamepad.buttons.length > 4) {
         // A/X button (button 4)
-        const primaryButton = isLeft ? elements.buttons.x : elements.buttons.a;
-        if (primaryButton) {
-            setBoolValue(gamepad.buttons[4].touched, primaryButton.touch);
-            setBoolValue(gamepad.buttons[4].pressed, primaryButton.pressed);
-        }
+        const primaryButtonName = isLeft ? 'x' : 'a';
+        const primaryButtonElements = isLeft ? elements.buttons.x : elements.buttons.a;
+        controllerInfo.setValue('touch', gamepad.buttons[4].touched, primaryButtonElements, 'bool');
+        controllerInfo.setValue('pressed', gamepad.buttons[4].pressed, primaryButtonElements, 'bool');
     }
     
     if (gamepad.buttons.length > 5) {
         // B/Y button (button 5)
-        const secondaryButton = isLeft ? elements.buttons.y : elements.buttons.b;
-        if (secondaryButton) {
-            setBoolValue(gamepad.buttons[5].touched, secondaryButton.touch);
-            setBoolValue(gamepad.buttons[5].pressed, secondaryButton.pressed);
-        }
+        const secondaryButtonElements = isLeft ? elements.buttons.y : elements.buttons.b;
+        controllerInfo.setValue('touch', gamepad.buttons[5].touched, secondaryButtonElements, 'bool');
+        controllerInfo.setValue('pressed', gamepad.buttons[5].pressed, secondaryButtonElements, 'bool');
     }
     
     if (gamepad.buttons.length > 6) {
-        // Menu/System button (button 6)
-        const menuButton = isLeft ? elements.buttons.menu : elements.buttons.system;
-        if (menuButton) {
-            setBoolValue(gamepad.buttons[6].touched, menuButton.touch);
-            setBoolValue(gamepad.buttons[6].pressed, menuButton.pressed);
-        }
+        // Button 6: Surface touch sensor + Menu/System press
+        // Touch goes to surface element, press goes to menu/system
+        controllerInfo.setValue('touch', gamepad.buttons[6].touched, elements.buttons.surface, 'bool');
+        const menuButtonElements = isLeft ? elements.buttons.menu : elements.buttons.system;
+        controllerInfo.setValue('pressed', gamepad.buttons[6].pressed, menuButtonElements, 'bool');
     }
 }
 
@@ -322,9 +311,9 @@ function processInputSources(frame) {
     
     for (const inputSource of session.inputSources) {
         if (inputSource.handedness === 'left') {
-            updateController(inputSource, frame, LeftControllerInfoElements, true);
+            updateController(inputSource, frame, LeftControllerInfoElements, leftControllerInfo, true);
         } else if (inputSource.handedness === 'right') {
-            updateController(inputSource, frame, RightControllerInfoElements, false);
+            updateController(inputSource, frame, RightControllerInfoElements, rightControllerInfo, false);
         }
     }
 }
