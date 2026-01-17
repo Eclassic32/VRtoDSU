@@ -1,7 +1,7 @@
 # Main
 
-[ ] Make web page with WebXR
-[ ] Show headset and controller data
+[x] Make web page with WebXR
+[x] Show headset and controller data
  - [ ] Button state
  - [ ] Gyro
  - [ ] Acceleration

@@ -23,69 +23,79 @@
 <body>
     <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center p-4">
 
-        <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 mb-6 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors" disabled>XR not found</button>
+        
+        <div class="flex flex-col lg:flex-row gap-4 w-full max-w-7xl">
+            <div class="flex flex-col justify-between">
+                <div id="headset-info" class="space-y-2">
 
-        <div class="flex flex-col xl:flex-row gap-4 w-full max-w-7xl">
-            <div id="headset-info" class="space-y-2 flex-1">
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
-                    Headset Info
-                </div>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div>
-                        Battery: 
-                        <span id="headset-battery-state">Full</span>
-                        <span id="headset-battery-level">100%</span> 
-                        <span id="headset-battery-charging">Charged</span>
+
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
+                        Headset Info
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                        <div>
+                            Battery: 
+                            <span id="headset-battery-state">Full</span>
+                            <span id="headset-battery-level">100%</span> 
+                            <span id="headset-battery-charging">Charged</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                        <div class="grid grid-cols-2 gap-2">
+                            <span>Volume Up:</span>
+                            <span id="headset-volume-up-btn-pressed" class="btn-notactive text-center">Press</span> 
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <span>Volume Down:</span>
+                            <span id="headset-volume-down-btn-pressed" class="btn-notactive text-center">Press</span> 
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <span>Power:</span>
+                            <span id="headset-power-btn-pressed" class="btn-notactive text-center">Press</span> 
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">Yaw:</span>
+                            <span id="headset-yaw-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-yaw" id="headset-yaw-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">Pitch:</span>
+                            <span id="headset-pitch-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-pitch" id="headset-pitch-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">Roll:</span>
+                            <span id="headset-roll-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-roll" id="headset-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">x:</span>
+                            <span id="headset-x-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-x" id="headset-x-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">y:</span>
+                            <span id="headset-y-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-y" id="headset-y-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            <span class="w-16">z:</span>
+                            <span id="headset-z-num" class="w-10 text-right">128</span> 
+                            <input type="range" name="headset-z" id="headset-z-range" min="0" max="255" value="128" class="flex-1" disabled>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div class="grid grid-cols-2 gap-2">
-                        <span>Volume Up:</span>
-                        <span id="headset-volume-up-btn-pressed" class="btn-notactive text-center">Press</span> 
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <span>Volume Down:</span>
-                        <span id="headset-volume-down-btn-pressed" class="btn-notactive text-center">Press</span> 
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <span>Power:</span>
-                        <span id="headset-power-btn-pressed" class="btn-notactive text-center">Press</span> 
-                    </div>
+
+                <div>
+                    <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 mt-3 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full" disabled>XR not found</button>
+                    
+                    <button id="other-button" class="rounded-full bg-gray-800 px-6 py-3 mt-3 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full">some other button</button>
                 </div>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">Yaw:</span>
-                        <span id="headset-yaw-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-yaw" id="headset-yaw-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">Pitch:</span>
-                        <span id="headset-pitch-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-pitch" id="headset-pitch-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">Roll:</span>
-                        <span id="headset-roll-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-roll" id="headset-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                </div>
-                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">x:</span>
-                        <span id="headset-x-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-x" id="headset-x-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">y:</span>
-                        <span id="headset-y-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-y" id="headset-y-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="w-16">z:</span>
-                        <span id="headset-z-num" class="w-10 text-right">128</span> 
-                        <input type="range" name="headset-z" id="headset-z-range" min="0" max="255" value="128" class="flex-1" disabled>
-                    </div>
-                </div>
+
             </div>
 
             <div id="left-info" class="space-y-2 flex-1">
