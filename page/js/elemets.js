@@ -1,6 +1,6 @@
 import { getControllerConfig } from "./controllerConfig.js";
 
-export { setBoolValue, setRangeValue, testRumble, 
+export { setBoolValue, setRangeValue, testRumble, InitializeControllerInfoDisplays, 
          HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements};
 
 function setBoolValue(value, element) {
