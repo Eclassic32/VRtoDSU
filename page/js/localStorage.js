@@ -3,6 +3,15 @@ const CONTROLLER_CONFIG_KEY = 'controllerConfig';
 const CONTROLLER_CONFIG_NAME_KEY = 'controllerConfigName';
 const DEFAULT_CONFIG_PATH = './page/assets/quest2.json';
 
+let controllerConfig = null;
+export function getControllerConfig() {
+    if (!controllerConfig) {
+        const item = localStorage.getItem(CONTROLLER_CONFIG_KEY);
+        controllerConfig = item ? JSON.parse(item) : null;
+    }
+    return controllerConfig;
+}
+
 function updateConfigLabel(name) {
     const span = document.getElementById('controller-config-file');
     if (span) span.textContent = name;
@@ -15,8 +24,8 @@ async function loadDefaultConfigIfMissing() {
             if (!resp.ok) throw new Error('Network response was not ok');
             const json = await resp.json();
             localStorage.setItem(CONTROLLER_CONFIG_KEY, JSON.stringify(json));
-            localStorage.setItem(CONTROLLER_CONFIG_NAME_KEY, 'quest2.json');
-            updateConfigLabel('Example Quest 2 Controller Config');
+            localStorage.setItem(CONTROLLER_CONFIG_NAME_KEY, json.meta?.name || 'quest2.json');
+            updateConfigLabel(json.meta?.name || 'Example Quest 2 Controller Config');
         } catch (err) {
             console.error('Failed to load default controller config:', err);
         }
@@ -40,8 +49,8 @@ function setupUploadHandler() {
             const text = await file.text();
             const data = JSON.parse(text);
             localStorage.setItem(CONTROLLER_CONFIG_KEY, JSON.stringify(data));
-            localStorage.setItem(CONTROLLER_CONFIG_NAME_KEY, file.name);
-            updateConfigLabel(file.name);
+            localStorage.setItem(CONTROLLER_CONFIG_NAME_KEY, data.meta?.name || file.name);
+            updateConfigLabel(data.meta?.name || file.name);
         } catch (err) {
             console.error('Invalid controller config file:', err);
             alert('Failed to load controller config: invalid JSON');
