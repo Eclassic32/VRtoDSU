@@ -241,7 +241,7 @@ let RightControllerInfoElements = {
 let TrackerElements = {};
 
 // Switch from predefined to uploaded controller config
-function init() {
+function InitializeControllerInfoDisplays() {
     const controllerConfig = getControllerConfig();
     if (!controllerConfig) return;
 
@@ -306,7 +306,7 @@ function init() {
     });
 
 
-    
+
 }
 
 function makeBoolElement(name, inputs) {
