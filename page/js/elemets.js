@@ -261,6 +261,7 @@ function InitializeControllerInfoDisplays() {
             Object.keys(device.buttons).forEach(buttonKey => {
                 const buttonInputs = device.buttons[buttonKey];
 
+                let rowElement;
                 [rowElement, result.buttons[buttonKey]] = makeBoolElement(buttonKey, buttonInputs);
                 buttonElement.appendChild(rowElement);
             });
@@ -276,6 +277,7 @@ function InitializeControllerInfoDisplays() {
             Object.keys(device.axis).forEach(axisKey => {
                 const axisInputs = device.axis[axisKey];
 
+                let rowElement;
                 [rowElement, result.axis[axisKey]] = makeRangeElement(axisKey, axisInputs);
                 axisElement.appendChild(rowElement);
             });
@@ -379,45 +381,45 @@ function makeGyroGroup() {
     let groupElement = makeGroupElement();
 
     let yawElement, yawInfo;
-    [ yawElement, yawInfo ] = makeRangeElement('yaw');
+    [ yawElement, yawInfo ] = makeRangeElement('Yaw');
     groupElement.appendChild(yawElement);
 
     let pitchElement, pitchInfo;
-    [ pitchElement, pitchInfo ] = makeRangeElement('pitch');
+    [ pitchElement, pitchInfo ] = makeRangeElement('Pitch');
     groupElement.appendChild(pitchElement);
 
     let rollElement, rollInfo;
-    [ rollElement, rollInfo ] = makeRangeElement('roll');
+    [ rollElement, rollInfo ] = makeRangeElement('Roll');
     groupElement.appendChild(rollElement);
 
-    return [groupElement, { yaw: yawInfo, pitch: pitchInfo, roll: rollInfo }];
+    return [groupElement, { Yaw: yawInfo, Pitch: pitchInfo, Roll: rollInfo }];
 }
 
 function makeAccelGroup() {
     let groupElement = makeGroupElement();
 
     let xElement, xInfo;
-    [ xElement, xInfo ] = makeRangeElement('x');
+    [ xElement, xInfo ] = makeRangeElement('X');
     groupElement.appendChild(xElement);
 
     let yElement, yInfo;
-    [ yElement, yInfo ] = makeRangeElement('y');
+    [ yElement, yInfo ] = makeRangeElement('Y');
     groupElement.appendChild(yElement);
 
     let zElement, zInfo;
-    [ zElement, zInfo ] = makeRangeElement('z');
+    [ zElement, zInfo ] = makeRangeElement('Z');
     groupElement.appendChild(zElement);
 
-    return [groupElement, { x: xInfo, y: yInfo, z: zInfo }];
+    return [groupElement, { X: xInfo, Y: yInfo, Z: zInfo }];
 }
 
-const TEST_STRENGTHS = ['low', 'mid', 'high'];
+const TEST_STRENGTHS = ['Low', 'Mid', 'High'];
 
 function makeRumbleGroup() {
     let groupElement = makeGroupElement();
 
     let rumbleElement, rumbleInfo;
-    [ rumbleElement, rumbleInfo ] = makeRangeElement('rumble');
+    [ rumbleElement, rumbleInfo ] = makeRangeElement('Rumble');
     groupElement.appendChild(rumbleElement);
 
     let tests = {};

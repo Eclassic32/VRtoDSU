@@ -1,5 +1,5 @@
 import {HeadsetInfo, LeftControllerInfo, RightControllerInfo} from './class.js';
-import {HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements} from './elemets.js';
+import {HeadsetInfoElements, InitializeControllerInfoDisplays, LeftControllerInfoElements, RightControllerInfoElements} from './elemets.js';
 import "./xr.js";
 import "./controllerConfig.js";
 
@@ -17,3 +17,4 @@ const rightControllerInfo = new RightControllerInfo();
 export { headsetInfo, leftControllerInfo, rightControllerInfo,
          HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements };
 
+InitializeControllerInfoDisplays();
