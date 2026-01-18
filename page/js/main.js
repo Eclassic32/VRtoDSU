@@ -1,5 +1,5 @@
 import {HeadsetInfo, LeftControllerInfo, RightControllerInfo} from './class.js';
-import {HeadsetInfoElements, InitializeControllerInfoDisplays, LeftControllerInfoElements, RightControllerInfoElements} from './elemets.js';
+import {InitializeControllerInfoDisplays } from './elemets.js';
 import "./xr.js";
 import "./controllerConfig.js";
 
@@ -9,12 +9,11 @@ const leftControllerInfo = new LeftControllerInfo();
 const rightControllerInfo = new RightControllerInfo();
 
 // // Example usage:
-// headsetInfo.setValue('battery.level', 100, HeadsetInfoElements);
-// leftControllerInfo.setValue('button.x.pressed', true, LeftControllerInfoElements, 'bool');
-// rightControllerInfo.setValue('axis.trigger', 200, RightControllerInfoElements, 'range');
+// headsetInfo.setValue('battery.level', 100, TrackerElements.Headset);
+// leftControllerInfo.setValue('button.x.pressed', true, TrackerElements.LeftController, 'bool');
+// rightControllerInfo.setValue('axis.trigger', 200, TrackerElements.RightController, 'range');
 
 // Export for potential use by other modules
-export { headsetInfo, leftControllerInfo, rightControllerInfo,
-         HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements };
+export { headsetInfo, leftControllerInfo, rightControllerInfo };
 
 InitializeControllerInfoDisplays();

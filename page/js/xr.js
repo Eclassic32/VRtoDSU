@@ -1,6 +1,6 @@
-import { headsetInfo, leftControllerInfo, rightControllerInfo,
-         HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements } from './main.js';
+import { headsetInfo, leftControllerInfo, rightControllerInfo } from './main.js';
 import { getControllerConfig, disableControllerConfigUpload } from './controllerConfig.js';
+import { TrackerElements } from './elemets.js';
 // XR globals.
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -164,9 +164,9 @@ function updateHeadsetOrientation(pose) {
     const pitch = clamp(mapRange(euler.pitch, -90, 90, 0, 255), 0, 255);
     const roll = clamp(mapRange(euler.roll, -180, 180, 0, 255), 0, 255);
     
-    headsetInfo.setValue('yaw', yaw, HeadsetInfoElements.gyro, 'range');
-    headsetInfo.setValue('pitch', pitch, HeadsetInfoElements.gyro, 'range');
-    headsetInfo.setValue('roll', roll, HeadsetInfoElements.gyro, 'range');
+    headsetInfo.setValue('yaw', yaw, TrackerElements.Headset.gyro, 'range');
+    headsetInfo.setValue('pitch', pitch, TrackerElements.Headset.gyro, 'range');
+    headsetInfo.setValue('roll', roll, TrackerElements.Headset.gyro, 'range');
     
     // Calculate acceleration from position changes
     if (pose.transform.position) {
@@ -179,9 +179,9 @@ function updateHeadsetOrientation(pose) {
                 const ay = clamp(mapRange((pos.y - prevHeadsetPosition.y) / dt, -2, 2, 0, 255), 0, 255);
                 const az = clamp(mapRange((pos.z - prevHeadsetPosition.z) / dt, -2, 2, 0, 255), 0, 255);
                 
-                headsetInfo.setValue('x', ax, HeadsetInfoElements.accel, 'range');
-                headsetInfo.setValue('y', ay, HeadsetInfoElements.accel, 'range');
-                headsetInfo.setValue('z', az, HeadsetInfoElements.accel, 'range');
+                headsetInfo.setValue('x', ax, TrackerElements.Headset.accel, 'range');
+                headsetInfo.setValue('y', ay, TrackerElements.Headset.accel, 'range');
+                headsetInfo.setValue('z', az, TrackerElements.Headset.accel, 'range');
             }
         }
         prevHeadsetPosition = { x: pos.x, y: pos.y, z: pos.z };
@@ -322,9 +322,11 @@ function processInputSources(frame) {
     
     for (const inputSource of session.inputSources) {
         if (inputSource.handedness === 'left') {
-            updateController(inputSource, frame, LeftControllerInfoElements, leftControllerInfo, true);
+            if (!TrackerElements.LeftController) continue;
+            updateController(inputSource, frame, TrackerElements.LeftController, leftControllerInfo, true);
         } else if (inputSource.handedness === 'right') {
-            updateController(inputSource, frame, RightControllerInfoElements, rightControllerInfo, false);
+            if (!TrackerElements.RightController) continue;
+            updateController(inputSource, frame, TrackerElements.RightController, rightControllerInfo, false);
         }
     }
 }
@@ -341,7 +343,7 @@ function onXRFrame(time, frame) {
     let pose = frame.getViewerPose(xrRefSpace);
 
     // Update headset orientation
-    if (pose) {
+    if (pose && TrackerElements.Headset) {
         updateHeadsetOrientation(pose);
     }
     
