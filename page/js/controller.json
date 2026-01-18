@@ -1,0 +1,38 @@
+{
+    "meta": {
+        "version": "1.0.0",
+        "name": "Quest 2 Controller Config",
+        "author": "ec32",
+        "description": "Quest 2 Controller Config (no D-Pad)"
+    },
+    "tracking": {
+        "template": 0
+    },
+    "bindings": {
+        "a": "",
+        "b": "",
+        "x": "",
+        "y": "",
+
+        "dpadUp": false,
+        "dpadDown": false,
+        "dpadLeft": false,
+        "dpadRight": false,
+
+        "start": false,
+        "select": false,
+        "system": false,
+
+        "leftStickX": "",
+        "leftStickY": "",
+        "leftStickClick": "",
+        "leftTrigger": "",
+        "leftBumper": false,
+
+        "rightStickX": "",
+        "rightStickY": "",
+        "rightStickClick": "",
+        "rightTrigger": "",
+        "rightBumper": false
+    }
+}
