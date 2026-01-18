@@ -1,6 +1,6 @@
 import { headsetInfo, leftControllerInfo, rightControllerInfo,
          HeadsetInfoElements, LeftControllerInfoElements, RightControllerInfoElements } from './main.js';
-
+import { getControllerConfig, disableControllerConfigUpload } from './controllerConfig.js';
 // XR globals.
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -61,6 +61,7 @@ function onButtonClicked() {
 function onSessionStarted(session) {
     xrSession = session;
     xrButton.textContent = 'Exit VR';
+    disableControllerConfigUpload(true);
 
     // Listen for the sessions 'end' event so we can respond if the user
     // or UA ends the session for any reason.
@@ -94,6 +95,7 @@ function onSessionStarted(session) {
 function onSessionEnded(event) {
     xrSession = null;
     xrButton.textContent = 'Enter VR';
+    disableControllerConfigUpload(false);
 
     // Reset previous pose data
     prevHeadsetOrientation = null;
