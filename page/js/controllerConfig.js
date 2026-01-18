@@ -12,6 +12,11 @@ export function getControllerConfig() {
     return controllerConfig;
 }
 
+export function disableControllerConfigUpload(disable = true) {
+    const btn = document.getElementById('upload-controller-config-button');
+    btn.disabled = disable;
+}
+
 function updateConfigLabel(name) {
     const span = document.getElementById('controller-config-file');
     if (span) span.textContent = name;
