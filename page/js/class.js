@@ -3,8 +3,9 @@ export { HeadsetInfo, LeftControllerInfo, RightControllerInfo };
 
 class VRInfo {
     constructor() {
-        this.gyro = { x: null, y: null, z: null };
-        this.accel = { x: null, y: null, z: null };
+        this.name = '';
+        this.gyro = new GyroModuleInfo();
+        this.accel = new AccelModuleInfo();
     }
 
     setValue(name, value, elementGroup=null, type=null) {
@@ -21,6 +22,22 @@ class VRInfo {
                 element.innerText = value;
             }
         }
+    }
+}
+
+class GyroModuleInfo {
+    constructor() {
+        this.yaw = 0;
+        this.pitch = 0;
+        this.roll = 0;
+    }
+}
+
+class AccelModuleInfo {
+    constructor() {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
     }
 }
 

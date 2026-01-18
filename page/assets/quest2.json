@@ -7,34 +7,45 @@
     },
     "tracking": {
         "Headset": {
+            "buttons": {
+                "Power": {
+                    "Press": false
+                },
+                "VolumeUp": {
+                    "Press": false
+                },
+                "VolumeDown": {
+                    "Press": false
+                }
+            },
             "gyro": true,
             "accel": true
         },
         "LeftController": {
             "buttons": {
                 "X": {
-                    "touch": "buttons[4].touched",
-                    "press": "buttons[4].pressed"
+                    "Touch": "buttons[4].touched",
+                    "Press": "buttons[4].pressed"
                 },
                 "Y": {
-                    "touch": "buttons[5].touched",
-                    "press": "buttons[5].pressed"
+                    "Touch": "buttons[5].touched",
+                    "Press": "buttons[5].pressed"
                 },
                 "Menu": {
-                    "touch": false,
-                    "press": "buttons[6].pressed"
+                    "Touch": false,
+                    "Press": "buttons[6].pressed"
                 },
                 "StickClick": {
-                    "touch": "buttons[3].touched",
-                    "press": "buttons[3].pressed"
+                    "Touch": "buttons[3].touched",
+                    "Press": "buttons[3].pressed"
                 },
                 "Trigger": {
-                    "touch": "buttons[0].touched",
-                    "press": false
+                    "Touch": "buttons[0].touched",
+                    "Press": false
                 },
                 "Surface": {
-                    "touch": "buttons[6].touched",
-                    "press": false
+                    "Touch": "buttons[6].touched",
+                    "Press": false
                 }
             },
             "axis": {
@@ -50,28 +61,28 @@
         "RightController": {
             "buttons": {
                 "A": {
-                    "touch": "buttons[4].touched",
-                    "press": "buttons[4].pressed"
+                    "Touch": "buttons[4].touched",
+                    "Press": "buttons[4].pressed"
                 },
                 "B": {
-                    "touch": "buttons[5].touched",
-                    "press": "buttons[5].pressed"
+                    "Touch": "buttons[5].touched",
+                    "Press": "buttons[5].pressed"
                 },
                 "System": {
-                    "touch": false,
-                    "press": "buttons[6].pressed"
+                    "Touch": false,
+                    "Press": "buttons[6].pressed"
                 },
                 "StickClick": {
-                    "touch": "buttons[3].touched",
-                    "press": "buttons[3].pressed"
+                    "Touch": "buttons[3].touched",
+                    "Press": "buttons[3].pressed"
                 },
                 "Trigger": {
-                    "touch": "buttons[0].touched",
-                    "press": false
+                    "Touch": "buttons[0].touched",
+                    "Press": false
                 },
                 "Surface": {
-                    "touch": "buttons[6].touched",
-                    "press": false
+                    "Touch": "buttons[6].touched",
+                    "Press": false
                 }
             },
             "axis": {
