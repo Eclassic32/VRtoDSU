@@ -46,6 +46,10 @@ function InitializeControllerInfoDisplays() {
         let result = {};
         let deviceElement = makeDeviceElement();
 
+        // Title
+        let titleElement = makeTitleElement(deviceKey);
+        deviceElement.appendChild(titleElement);
+
         // Buttons
         if (device.buttons) {
             result.buttons = {};
@@ -153,6 +157,14 @@ function makeButtonElement(name) {
     buttonElement.innerText = name || "Button";
 
     return buttonElement;
+}
+
+function makeTitleElement(name) {
+    let titleElement = makeGroupElement();
+    titleElement.classList.add("font-bold", "text-center", "text-lg");
+    titleElement.innerText = name || "Device";
+
+    return titleElement;
 }
 
 function makeGroupElement() {
