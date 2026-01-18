@@ -1,0 +1,115 @@
+{
+    "meta": {
+        "version": "0.1.0",
+        "name": "Example Quest 2 Controller Config",
+        "author": "ec32",
+        "description": "Example Quest 2 Controller Config"
+    },
+    "tracking": {
+        "Headset": {
+            "gyro": true,
+            "accel": true
+        },
+        "LeftController": {
+            "buttons": {
+                "X": {
+                    "touch": "buttons[4].touched",
+                    "press": "buttons[4].pressed"
+                },
+                "Y": {
+                    "touch": "buttons[5].touched",
+                    "press": "buttons[5].pressed"
+                },
+                "Menu": {
+                    "touch": false,
+                    "press": "buttons[6].pressed"
+                },
+                "StickClick": {
+                    "touch": "buttons[3].touched",
+                    "press": "buttons[3].pressed"
+                },
+                "Trigger": {
+                    "touch": "buttons[0].touched",
+                    "press": false
+                },
+                "Surface": {
+                    "touch": "buttons[6].touched",
+                    "press": false
+                }
+            },
+            "axis": {
+                "StickX": "axes[2]",
+                "StickY": "axes[3]",
+                "Trigger": "buttons[0].value",
+                "Grip": "buttons[1].value"
+            },
+            "gyro": true,
+            "accel": true,
+            "rumble": true
+        },
+        "RightController": {
+            "buttons": {
+                "A": {
+                    "touch": "buttons[4].touched",
+                    "press": "buttons[4].pressed"
+                },
+                "B": {
+                    "touch": "buttons[5].touched",
+                    "press": "buttons[5].pressed"
+                },
+                "System": {
+                    "touch": false,
+                    "press": "buttons[6].pressed"
+                },
+                "StickClick": {
+                    "touch": "buttons[3].touched",
+                    "press": "buttons[3].pressed"
+                },
+                "Trigger": {
+                    "touch": "buttons[0].touched",
+                    "press": false
+                },
+                "Surface": {
+                    "touch": "buttons[6].touched",
+                    "press": false
+                }
+            },
+            "axis": {
+                "StickX": "axes[2]",
+                "StickY": "axes[3]",
+                "Trigger": "buttons[0].value",
+                "Grip": "buttons[1].value"
+            },
+            "gyro": true,
+            "accel": true,
+            "rumble": true
+        }
+    },
+    "bindings": {
+        "a": "RightController.buttons.A.press",
+        "b": "RightController.buttons.B.press",
+        "x": "LeftController.buttons.X.press",
+        "y": "LeftController.buttons.Y.press",
+
+        "dpadUp": "LeftController.buttons.Y.touch",
+        "dpadDown": "RightController.buttons.A.touch",
+        "dpadLeft": "LeftController.buttons.X.touch",
+        "dpadRight": "RightController.buttons.B.touch",
+
+        "start": "LeftController.buttons.StickClick.touch",
+        "select": "RightController.buttons.StickClick.touch",
+        "system": false,
+
+        "leftStickX": "LeftController.axis.StickX",
+        "leftStickY": "LeftController.axis.StickY",
+        "leftStickClick": "LeftController.buttons.StickClick.press",
+        "leftTrigger": "LeftController.axis.Trigger",
+        "leftBumper": "LeftController.buttons.Surface.touch",
+
+        "rightStickX": "RightController.axis.StickX",
+        "rightStickY": "RightController.axis.StickY",
+        "rightStickClick": "RightController.buttons.StickClick.press",
+        "rightTrigger": "RightController.axis.Trigger",
+        "rightBumper": "RightController.buttons.Surface.touch"
+    }
+}
