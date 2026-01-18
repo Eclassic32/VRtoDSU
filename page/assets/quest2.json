@@ -5,7 +5,7 @@
         "author": "ec32",
         "description": "Example Quest 2 Controller Config"
     },
-    "tracking": {
+    "devices": {
         "Headset": {
             "buttons": {
                 "Power": {
