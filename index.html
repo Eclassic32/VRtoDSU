@@ -23,15 +23,16 @@
 <body>
     <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center p-4">
 
-        
         <div class="flex flex-col lg:flex-row gap-4 w-full max-w-7xl">
-            <div class="flex flex-col justify-between">
+            <!-- First Column -->
+            <div class="flex flex-1 flex-col justify-between">
+                <!-- Headset Info -->
                 <div id="headset-info" class="space-y-2">
-
-
                     <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                         Headset Info
                     </div>
+
+                    <!-- Headset Buttons -->
                     <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                         <div class="grid grid-cols-2 gap-2">
                             <span>Volume Up:</span>
@@ -46,6 +47,8 @@
                             <span id="headset-power-btn-pressed" class="btn-notactive text-center">Press</span> 
                         </div>
                     </div>
+
+                    <!-- Headset Gyro -->
                     <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                         <div class="flex items-center justify-between gap-3">
                             <span class="w-16">Yaw:</span>
@@ -63,6 +66,8 @@
                             <input type="range" name="headset-roll" id="headset-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
                         </div>
                     </div>
+
+                    <!-- Headset Accel -->
                     <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                         <div class="flex items-center justify-between gap-3">
                             <span class="w-16">Accel X:</span>
@@ -82,18 +87,37 @@
                     </div>
                 </div>
 
+                <!-- Web page Buttons -->
                 <div>
+                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 mt-3 space-y-2">
+                        <div class="flex items-center justify-between gap-3">
+                            Host Status: 
+                            <span id="host-status" class="font-bold">Disconnected</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            Host IP: <input type="text" name="host-ip" id="host-ip" class="bg-gray-700 rounded px-2 py-1" value="" placeholder="wss://localhost:12345">
+                        </div>
+                        <div class="flex items-center justify-between gap-3">
+                            Controller Config:
+                            <span id="upload-controller-config-file" class="">default.json</span>
+                            <input type="button" value="Upload" id="upload-controller-config-button" name="upload-controller-config" class="rounded-full bg-gray-700 px-2 py-1 hover:bg-gray-600 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <button id="connect-button" class="rounded-full bg-gray-800 px-6 py-3 mt-3 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full">Connect to Host</button>
+
                     <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 mt-3 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full" disabled>XR not found</button>
-                    
-                    <button id="other-button" class="rounded-full bg-gray-800 px-6 py-3 mt-3 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full">some other button</button>
                 </div>
 
             </div>
 
+            <!-- Left Controller Info -->
             <div id="left-info" class="space-y-2 flex-1">
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                     Left Controller Info
                 </div>
+
+                <!-- Left Controller Buttons -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="grid grid-cols-3 gap-2">
                         <span>X:</span>
@@ -126,6 +150,8 @@
                         <span id="left-trigger-pressed" class="btn-unknown text-center">Press</span> 
                     </div>
                 </div>
+
+                <!-- Left Controller Axis -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Stick X:</span>
@@ -148,6 +174,8 @@
                         <input type="range" name="left-grip" id="left-grip-range" min="0" max="255" value="0" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Left Controller Gyro -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Yaw:</span>
@@ -165,6 +193,8 @@
                         <input type="range" name="left-roll" id="left-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Left Controller Accel -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Accel X:</span>
@@ -182,12 +212,15 @@
                         <input type="range" name="left-accel-z" id="left-accel-z-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Left Controller Rumble -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Rumble:</span>
                         <span id="left-rumble-num" class="w-10 text-right">0</span> 
                         <input type="range" name="left-rumble" id="left-rumble-range" min="0" max="255" value="0" class="flex-1" disabled>
                     </div>
+
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Test:</span>
                         <span class="w-10"></span>
@@ -200,10 +233,13 @@
                 </div>
             </div>
 
+            <!-- Right Controller Info -->
             <div id="right-info" class="space-y-2 flex-1">
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 font-bold text-center text-lg">
                     Right Controller Info
                 </div>
+
+                <!-- Right Controller Buttons -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="grid grid-cols-3 gap-2">
                         <span>A:</span>
@@ -236,6 +272,8 @@
                         <span id="right-trigger-pressed" class="btn-unknown text-center">Press</span> 
                     </div>
                 </div>
+
+                <!-- Right Controller Axis -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Stick X:</span>
@@ -258,6 +296,8 @@
                         <input type="range" name="right-grip" id="right-grip-range" min="0" max="255" value="0" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Right Controller Gyro -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Yaw:</span>
@@ -275,6 +315,8 @@
                         <input type="range" name="right-roll" id="right-roll-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Right Controller Accel -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Accel X:</span>
@@ -292,12 +334,15 @@
                         <input type="range" name="right-accel-z" id="right-accel-z-range" min="0" max="255" value="128" class="flex-1" disabled>
                     </div>
                 </div>
+
+                <!-- Right Controller Rumble -->
                 <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Rumble:</span>
                         <span id="right-rumble-num" class="w-10 text-right">0</span> 
                         <input type="range" name="right-rumble" id="right-rumble-range" min="0" max="255" value="0" class="flex-1" disabled>
                     </div>
+
                     <div class="flex items-center justify-between gap-3">
                         <span class="w-16">Test:</span>
                         <span class="w-10"></span>
