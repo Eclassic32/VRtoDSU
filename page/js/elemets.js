@@ -111,7 +111,7 @@ function makeBoolElement(name, inputs) {
     let row = {};
     let rowElement = document.createElement('div');
     rowElement.className = "grid grid-cols-3 gap-2"
-    rowElement.innerHTML = "<label>" + name + "</label>";
+    rowElement.innerHTML = "<label>" + name + ":</label>";
 
     Object.keys(inputs).forEach(inputKey => {
         const input = inputs[inputKey];
@@ -130,7 +130,7 @@ function makeRangeElement(name) {
     let row = {};
     let rowElement = document.createElement('div');
     rowElement.className = "flex items-center justify-between gap-3"
-    rowElement.innerHTML = "<label class=\"w-16\">" + name + "</label>";
+    rowElement.innerHTML = "<label class=\"w-16\">" + name + ":</label>";
 
     let numSpan = document.createElement('span');
     numSpan.className = "w-10 text-right";
@@ -203,15 +203,15 @@ function makeAccelGroup() {
     let groupElement = makeGroupElement();
 
     let xElement, xInfo;
-    [ xElement, xInfo ] = makeRangeElement('X');
+    [ xElement, xInfo ] = makeRangeElement('Accel X');
     groupElement.appendChild(xElement);
 
     let yElement, yInfo;
-    [ yElement, yInfo ] = makeRangeElement('Y');
+    [ yElement, yInfo ] = makeRangeElement('Accel Y');
     groupElement.appendChild(yElement);
 
     let zElement, zInfo;
-    [ zElement, zInfo ] = makeRangeElement('Z');
+    [ zElement, zInfo ] = makeRangeElement('Accel Z');
     groupElement.appendChild(zElement);
 
     return [groupElement, { X: xInfo, Y: yInfo, Z: zInfo }];
@@ -229,7 +229,7 @@ function makeRumbleGroup() {
     let tests = {};
     let testRowElement = document.createElement('div');
     testRowElement.className = "flex items-center justify-between gap-3";
-    testRowElement.innerHTML = "<label class=\"w-16\">Test</label><span class=\"w-10\"></span>";
+    testRowElement.innerHTML = "<label class=\"w-16\">Test:</label><span class=\"w-10\"></span>";
 
     TEST_STRENGTHS.forEach(strength => {
         let button = makeButtonElement(strength);

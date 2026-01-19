@@ -11,7 +11,7 @@
 # Extra
 
 [ ] Calibration
-[ ] Make Contoller config
+[x] Make Contoller config
 [ ] Merge button inputs into single virtual controller
 [ ] Show data within VR too
  - [ ] Make data windows movable 
