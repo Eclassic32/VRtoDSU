@@ -25,6 +25,9 @@ const CLIENT_TIMEOUT = 5000; // 5 seconds
 // Latest controller data from WebSocket
 let latestControllerData = null;
 
+// Debug counter
+let packetLogCounter = 0;
+
 // ============== CRC32 Implementation ==============
 const crc32Table = (() => {
     const table = new Uint32Array(256);
@@ -273,6 +276,13 @@ wss.on('connection', (ws, req) => {
             if (controlData && controlData.type === 'dsu_controller_data') {
                 latestControllerData = controlData;
                 broadcastControllerData();
+                // Debug: log first controller's gyro values occasionally
+                if (packetLogCounter++ % 100 === 0) {
+                    const ctrl = controlData.controllers[1];
+                    if (ctrl) {
+                        console.log(`[DSU] Slot ${ctrl.slot} packet #${packetLogCounter}, data length: ${ctrl.packet.length}`);
+                    }
+                }
             }
         } else {
             console.log(`[${timestamp}] Unknown message type:`, message.toString());
@@ -280,8 +290,7 @@ wss.on('connection', (ws, req) => {
     });
 
     ws.on('close', (code, reason) => {
-        console.log(`[DISCONNECTED] Client disconnected. Code: ${code} 
-                        ${(code != 1000) ? `Reason: ${reason || 'None'}` : ''}`);
+        console.log(`[DISCONNECTED] Client disconnected. Code: ${code} ${(code != 1000) ? `Reason: ${reason || 'None'}` : ''}`);
     });
 
     ws.on('error', (error) => {
