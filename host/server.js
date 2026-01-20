@@ -10,9 +10,14 @@ wss.on('connection', (ws, req) => {
     const clientAddress = req.socket.remoteAddress;
     console.log(`\n[CONNECTED] Client connected from ${clientAddress}`);
 
-    ws.on('message', (message) => {
+    ws.on('config', (message) => {
         const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] Received:`, message.toString());
+        console.log(`[${timestamp}] Config:`, message.toString());
+    });
+
+    ws.on('control', (message) => {
+        const timestamp = new Date().toISOString();
+        console.log(`[${timestamp}] Control:`, message.toString());
     });
 
     ws.on('close', (code, reason) => {
