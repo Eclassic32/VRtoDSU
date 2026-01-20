@@ -5,11 +5,19 @@ const hostIPInput = document.getElementById('host-ip');
 const connectButton = document.getElementById('connect-button');
 
 let ws = null;
+export let isWSConnected = false;
 
-function updateStatus(status, color = 'inherit') {
+console.log(connectButton);
+
+
+function updateStatus(isConnected, status, color = 'inherit', btnText = null) {
+    isWSConnected = isConnected;
     if (hostStatusSpan) {
         hostStatusSpan.textContent = status;
         hostStatusSpan.style.color = color;
+    }
+    if (connectButton && btnText) {
+        connectButton.textContent = btnText;
     }
 }
 
@@ -23,6 +31,8 @@ export function sendControllerConfig() {
         console.warn('No controller config available');
         return false;
     }
+    console.log(JSON.stringify({ type: 'config', data: config }));
+    
     ws.send(JSON.stringify({ type: 'config', data: config }));
     return true;
 }
@@ -41,7 +51,7 @@ function connect() {
     
     let ip = hostIPInput?.value?.trim();
     if (!ip) {
-        updateStatus('No IP provided', 'red');
+        updateStatus(false, 'No IP provided', 'red', 'Connect to Host');
         return;
     }
     
@@ -49,24 +59,24 @@ function connect() {
         ws.close();
     }
     
-    updateStatus('Connecting...', 'orange');
+    updateStatus(false, 'Connecting...', 'orange', 'Connecting...');
     
     ip = (ip.startsWith('ws://') || ip.startsWith('wss://')) ? ip : `ws://${ip}`;
     ws = new WebSocket(ip);
 
     ws.onopen = () => {
-        updateStatus('Connected', 'green');
+        updateStatus(true, 'Connected', 'green', 'Disconnect');
         sendControllerConfig();
     };
 
     ws.onclose = () => {
-        updateStatus('Disconnected', 'red');
+        updateStatus(false, 'Disconnected', 'red', 'Connect to Host');
         ws = null;
     };
 
     ws.onerror = (err) => {
         console.error('WebSocket error:', err);
-        updateStatus('Error', 'red');
+        updateStatus(false, 'Error', 'red', 'Connect to Host');
     };
 
     ws.onmessage = (event) => {
@@ -74,4 +84,16 @@ function connect() {
     };
 }
 
-connectButton?.addEventListener('click', connect);
+function disconnect() {
+    if (ws) {
+        ws.close(1000, 'Client disconnected');
+    }
+}
+
+connectButton?.addEventListener('click', () => {
+    if (isWSConnected) {
+        disconnect();
+    } else {
+        connect();
+    }
+});

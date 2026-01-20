@@ -21,18 +21,21 @@ wss.on('connection', (ws, req) => {
     const clientAddress = req.socket.remoteAddress;
     console.log(`\n[CONNECTED] Client connected from ${clientAddress}`);
 
-    ws.on('config', (message) => {
+    ws.on('message', (message) => {
         const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] Config:`, message.toString());
-    });
+        message = JSON.parse(message);
+        if (message.type == 'config')
+            console.log(`[${timestamp}] Config:`, message.data.meta.name);
+        else if (message.type == 'control')
+            console.log(`[${timestamp}] Control:`, message.data.toString());
+        else 
+            console.log(`[${timestamp}] Unknown message type:`, message.toString());
 
-    ws.on('control', (message) => {
-        const timestamp = new Date().toISOString();
-        console.log(`[${timestamp}] Control:`, message.toString());
     });
 
     ws.on('close', (code, reason) => {
-        console.log(`[DISCONNECTED] Client disconnected. Code: ${code}, Reason: ${reason || 'None'}`);
+        console.log(`[DISCONNECTED] Client disconnected. Code: ${code} 
+                        ${(code != 1000) ? `Reason: ${reason || 'None'}` : ''}`);
     });
 
     ws.on('error', (error) => {
