@@ -169,9 +169,9 @@ function updateHeadsetOrientation(pose) {
     const pitch = clamp(mapRange(euler.pitch, -90, 90, 0, 255), 0, 255);
     const roll = clamp(mapRange(euler.roll, -180, 180, 0, 255), 0, 255);
     
-    headsetInfo.setValue('yaw', yaw, TrackerElements.Headset.gyro, 'range');
-    headsetInfo.setValue('pitch', pitch, TrackerElements.Headset.gyro, 'range');
-    headsetInfo.setValue('roll', roll, TrackerElements.Headset.gyro, 'range');
+    headsetInfo.setValue('Yaw', yaw, TrackerElements.Headset.gyro, 'range');
+    headsetInfo.setValue('Pitch', pitch, TrackerElements.Headset.gyro, 'range');
+    headsetInfo.setValue('Roll', roll, TrackerElements.Headset.gyro, 'range');
     
     // Calculate acceleration from position changes
     if (pose.transform.position) {
@@ -184,9 +184,9 @@ function updateHeadsetOrientation(pose) {
                 const ay = clamp(mapRange((pos.y - prevHeadsetPosition.y) / dt, -2, 2, 0, 255), 0, 255);
                 const az = clamp(mapRange((pos.z - prevHeadsetPosition.z) / dt, -2, 2, 0, 255), 0, 255);
                 
-                headsetInfo.setValue('x', ax, TrackerElements.Headset.accel, 'range');
-                headsetInfo.setValue('y', ay, TrackerElements.Headset.accel, 'range');
-                headsetInfo.setValue('z', az, TrackerElements.Headset.accel, 'range');
+                headsetInfo.setValue('X', ax, TrackerElements.Headset.accel, 'range');
+                headsetInfo.setValue('Y', ay, TrackerElements.Headset.accel, 'range');
+                headsetInfo.setValue('Z', az, TrackerElements.Headset.accel, 'range');
             }
         }
         prevHeadsetPosition = { x: pos.x, y: pos.y, z: pos.z };
@@ -205,9 +205,9 @@ function updateControllerOrientation(pose, elements, controllerInfo, prevOrienta
     const pitch = clamp(mapRange(euler.pitch, -90, 90, 0, 255), 0, 255);
     const roll = clamp(mapRange(euler.roll, -180, 180, 0, 255), 0, 255);
     
-    controllerInfo.setValue('yaw', yaw, elements.gyro, 'range');
-    controllerInfo.setValue('pitch', pitch, elements.gyro, 'range');
-    controllerInfo.setValue('roll', roll, elements.gyro, 'range');
+    controllerInfo.setValue('Yaw', yaw, elements.gyro, 'range');
+    controllerInfo.setValue('Pitch', pitch, elements.gyro, 'range');
+    controllerInfo.setValue('Roll', roll, elements.gyro, 'range');
     
     // Calculate acceleration from position changes
     if (pose.transform.position) {
@@ -219,9 +219,9 @@ function updateControllerOrientation(pose, elements, controllerInfo, prevOrienta
                 const ay = clamp(mapRange((pos.y - prevPosition.y) / dt, -2, 2, 0, 255), 0, 255);
                 const az = clamp(mapRange((pos.z - prevPosition.z) / dt, -2, 2, 0, 255), 0, 255);
                 
-                controllerInfo.setValue('x', ax, elements.accel, 'range');
-                controllerInfo.setValue('y', ay, elements.accel, 'range');
-                controllerInfo.setValue('z', az, elements.accel, 'range');
+                controllerInfo.setValue('X', ax, elements.accel, 'range');
+                controllerInfo.setValue('Y', ay, elements.accel, 'range');
+                controllerInfo.setValue('Z', az, elements.accel, 'range');
             }
         }
         return { 
@@ -264,8 +264,8 @@ function updateController(inputSource, frame, elements, controllerInfo, isLeft) 
         const mappedStickX = clamp(mapRange(stickX, -1, 1, 0, 255), 0, 255);
         const mappedStickY = clamp(mapRange(stickY, -1, 1, 0, 255), 0, 255);
         
-        controllerInfo.setValue('stickX', mappedStickX, elements.axis, 'range');
-        controllerInfo.setValue('stickY', mappedStickY, elements.axis, 'range');
+        controllerInfo.setValue('StickX', mappedStickX, elements.axis, 'range');
+        controllerInfo.setValue('StickY', mappedStickY, elements.axis, 'range');
     }
     
     // Update buttons
@@ -281,43 +281,43 @@ function updateController(inputSource, frame, elements, controllerInfo, isLeft) 
     if (gamepad.buttons.length > 0) {
         // Trigger (button 0)
         const triggerValue = clamp(Math.round(gamepad.buttons[0].value * 255), 0, 255);
-        controllerInfo.setValue('trigger', triggerValue, elements.axis, 'range');
-        controllerInfo.setValue('touch', gamepad.buttons[0].touched, elements.buttons.trigger, 'bool');
+        controllerInfo.setValue('Trigger', triggerValue, elements.axis, 'range');
+        controllerInfo.setValue('Touch', gamepad.buttons[0].touched, elements.buttons.Trigger, 'bool');
     }
     
     if (gamepad.buttons.length > 1) {
         // Grip (button 1) - axis value only
         const gripValue = clamp(Math.round(gamepad.buttons[1].value * 255), 0, 255);
-        controllerInfo.setValue('grip', gripValue, elements.axis, 'range');
+        controllerInfo.setValue('Grip', gripValue, elements.axis, 'range');
     }
     
     if (gamepad.buttons.length > 3) {
         // Thumbstick click (button 3)
-        controllerInfo.setValue('touch', gamepad.buttons[3].touched, elements.buttons.stickClick, 'bool');
-        controllerInfo.setValue('pressed', gamepad.buttons[3].pressed, elements.buttons.stickClick, 'bool');
+        controllerInfo.setValue('Touch', gamepad.buttons[3].touched, elements.buttons.StickClick, 'bool');
+        controllerInfo.setValue('Press', gamepad.buttons[3].pressed, elements.buttons.StickClick, 'bool');
     }
     
     if (gamepad.buttons.length > 4) {
         // A/X button (button 4)
-        const primaryButtonName = isLeft ? 'x' : 'a';
-        const primaryButtonElements = isLeft ? elements.buttons.x : elements.buttons.a;
-        controllerInfo.setValue('touch', gamepad.buttons[4].touched, primaryButtonElements, 'bool');
-        controllerInfo.setValue('pressed', gamepad.buttons[4].pressed, primaryButtonElements, 'bool');
+        const primaryButtonName = isLeft ? 'X' : 'A';
+        const primaryButtonElements = isLeft ? elements.buttons.X : elements.buttons.A;
+        controllerInfo.setValue('Touch', gamepad.buttons[4].touched, primaryButtonElements, 'bool');
+        controllerInfo.setValue('Press', gamepad.buttons[4].pressed, primaryButtonElements, 'bool');
     }
     
     if (gamepad.buttons.length > 5) {
         // B/Y button (button 5)
-        const secondaryButtonElements = isLeft ? elements.buttons.y : elements.buttons.b;
-        controllerInfo.setValue('touch', gamepad.buttons[5].touched, secondaryButtonElements, 'bool');
-        controllerInfo.setValue('pressed', gamepad.buttons[5].pressed, secondaryButtonElements, 'bool');
+        const secondaryButtonElements = isLeft ? elements.buttons.Y : elements.buttons.B;
+        controllerInfo.setValue('Touch', gamepad.buttons[5].touched, secondaryButtonElements, 'bool');
+        controllerInfo.setValue('Press', gamepad.buttons[5].pressed, secondaryButtonElements, 'bool');
     }
     
     if (gamepad.buttons.length > 6) {
         // Button 6: Surface touch sensor + Menu/System press
         // Touch goes to surface element, press goes to menu/system
-        controllerInfo.setValue('touch', gamepad.buttons[6].touched, elements.buttons.surface, 'bool');
-        const menuButtonElements = isLeft ? elements.buttons.menu : elements.buttons.system;
-        controllerInfo.setValue('pressed', gamepad.buttons[6].pressed, menuButtonElements, 'bool');
+        controllerInfo.setValue('Touch', gamepad.buttons[6].touched, elements.buttons.Surface, 'bool');
+        const menuButtonElements = isLeft ? elements.buttons.Menu : elements.buttons.System;
+        controllerInfo.setValue('Press', gamepad.buttons[6].pressed, menuButtonElements, 'bool');
     }
 }
 

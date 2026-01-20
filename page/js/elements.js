@@ -118,7 +118,7 @@ function makeBoolElement(name, inputs) {
         const input = inputs[inputKey];
         let span = document.createElement('span');
         span.innerText = inputKey;
-        span.className = "text-center btn-" + (input ? "notactive" : "unknown");
+        span.className = "text-center btn-" + (input ? "notActive" : "unknown");
 
         rowElement.appendChild(span);
         row[inputKey] = span;
