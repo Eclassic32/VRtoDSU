@@ -96,6 +96,25 @@
             "rumble": true
         }
     },
+    "defaults": {
+        "Headset": {},
+        "LeftController": {
+            "axis": {
+                "StickX": 127,
+                "StickY": 127,
+                "Trigger": 0,
+                "Grip": 0
+            }
+        },
+        "RightController": {
+            "axis": {
+                "StickX": 127,
+                "StickY": 127,
+                "Trigger": 0,
+                "Grip": 0
+            }
+        }
+    },
     "bindings": {
         "a": "RightController.buttons.A.press",
         "b": "RightController.buttons.B.press",

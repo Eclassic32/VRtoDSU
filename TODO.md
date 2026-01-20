@@ -12,6 +12,7 @@
 
 [ ] Calibration
 [x] Make Contoller config
+[FIX:] Show default values on config load
 [ ] Merge button inputs into single virtual controller
 [ ] Show data within VR too
  - [ ] Make data windows movable 

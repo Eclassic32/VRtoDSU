@@ -43,6 +43,7 @@ function InitializeControllerInfoDisplays() {
 
     Object.keys(controllerConfig.devices).forEach(deviceKey => {
         const device = controllerConfig.devices[deviceKey];
+        const defaults = controllerConfig.defaults?.[deviceKey];
         let result = {};
         let deviceElement = makeDeviceElement();
 
@@ -75,7 +76,7 @@ function InitializeControllerInfoDisplays() {
                 const axisInputs = device.axis[axisKey];
 
                 let rowElement;
-                [rowElement, result.axis[axisKey]] = makeRangeElement(axisKey, axisInputs);
+                [rowElement, result.axis[axisKey]] = makeRangeElement(axisKey, defaults?.axis?.[axisKey]);
                 axisElement.appendChild(rowElement);
             });
 
@@ -104,7 +105,7 @@ function InitializeControllerInfoDisplays() {
         infoColumns.appendChild(deviceElement);
     });
 
-    console.log(TrackerElements);
+    console.log("Tracker Elements:", TrackerElements);
 }
 
 function makeBoolElement(name, inputs) {
@@ -126,7 +127,7 @@ function makeBoolElement(name, inputs) {
     return [rowElement, row];
 }
 
-function makeRangeElement(name) {
+function makeRangeElement(name, defaultValue=false) {
     let row = {};
     let rowElement = document.createElement('div');
     rowElement.className = "flex items-center justify-between gap-3"
@@ -134,7 +135,7 @@ function makeRangeElement(name) {
 
     let numSpan = document.createElement('span');
     numSpan.className = "w-10 text-right";
-    numSpan.innerText = "0";
+    numSpan.innerText = defaultValue ? defaultValue : "0";
     rowElement.appendChild(numSpan);
     row.num = numSpan;
 
@@ -142,7 +143,7 @@ function makeRangeElement(name) {
     rangeInput.type = "range";
     rangeInput.min = "0";
     rangeInput.max = "255";
-    rangeInput.value = "0";
+    rangeInput.value = defaultValue ? defaultValue : "0";
     rangeInput.className = "flex-1";
     rangeInput.disabled = true;
     rowElement.appendChild(rangeInput);
@@ -185,15 +186,15 @@ function makeGyroGroup() {
     let groupElement = makeGroupElement();
 
     let yawElement, yawInfo;
-    [ yawElement, yawInfo ] = makeRangeElement('Yaw');
+    [ yawElement, yawInfo ] = makeRangeElement('Yaw', 128);
     groupElement.appendChild(yawElement);
 
     let pitchElement, pitchInfo;
-    [ pitchElement, pitchInfo ] = makeRangeElement('Pitch');
+    [ pitchElement, pitchInfo ] = makeRangeElement('Pitch', 128);
     groupElement.appendChild(pitchElement);
 
     let rollElement, rollInfo;
-    [ rollElement, rollInfo ] = makeRangeElement('Roll');
+    [ rollElement, rollInfo ] = makeRangeElement('Roll', 128);
     groupElement.appendChild(rollElement);
 
     return [groupElement, { Yaw: yawInfo, Pitch: pitchInfo, Roll: rollInfo }];
@@ -203,15 +204,15 @@ function makeAccelGroup() {
     let groupElement = makeGroupElement();
 
     let xElement, xInfo;
-    [ xElement, xInfo ] = makeRangeElement('Accel X');
+    [ xElement, xInfo ] = makeRangeElement('Accel X', 128);
     groupElement.appendChild(xElement);
 
     let yElement, yInfo;
-    [ yElement, yInfo ] = makeRangeElement('Accel Y');
+    [ yElement, yInfo ] = makeRangeElement('Accel Y', 128);
     groupElement.appendChild(yElement);
 
     let zElement, zInfo;
-    [ zElement, zInfo ] = makeRangeElement('Accel Z');
+    [ zElement, zInfo ] = makeRangeElement('Accel Z', 128);
     groupElement.appendChild(zElement);
 
     return [groupElement, { X: xInfo, Y: yInfo, Z: zInfo }];
