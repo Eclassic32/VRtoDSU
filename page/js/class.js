@@ -12,6 +12,7 @@ class VRInfo {
         if (this.hasOwnProperty(name)) {
             this[name] = value;
         }
+        
         if (elementGroup && elementGroup.hasOwnProperty(name)) {
             const element = elementGroup[name];
             if (type === 'bool') {
@@ -27,17 +28,17 @@ class VRInfo {
 
 class GyroModuleInfo {
     constructor() {
-        this.yaw = 0;
-        this.pitch = 0;
-        this.roll = 0;
+        this.Yaw = 0;
+        this.Pitch = 0;
+        this.Roll = 0;
     }
 }
 
 class AccelModuleInfo {
     constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
+        this.X = 0;
+        this.Y = 0;
+        this.Z = 0;
     }
 }
 
@@ -45,9 +46,9 @@ class HeadsetInfo extends VRInfo {
     constructor() {
         super();
         this.buttons = {
-            volUp : { pressed: false },
-            volDown : { pressed: false },
-            power : { pressed: false },
+            VolumeUp : { pressed: false },
+            VolumeDown : { pressed: false },
+            Power : { pressed: false },
         };
     }
 }
@@ -56,36 +57,36 @@ class ControllerInfo extends VRInfo {
     constructor() {
         super();
         this.buttons = {
-            stickClick : {touch: false, press: false},
-            surface : {touch: false, press: null},
-            trigger : {touch: false, press: null}
+            StickClick : {touch: false, press: false},
+            Surface : {touch: false, press: null},
+            Trigger : {touch: false, press: null}
         }
 
         this.axis = {
-            stickX : 128,
-            stickY : 128,
-            trigger : 0,
-            grip : 0
+            StickX : 128,
+            StickY : 128,
+            Trigger : 0,
+            Grip : 0
         };
 
-        this.rumble = 0;
+        this.Rumble = 0;
     }
 }
 
 class LeftControllerInfo extends ControllerInfo {
     constructor() {
         super();
-        this.buttons.x = { touch: false, press: false };
-        this.buttons.y = { touch: false, press: false };
-        this.buttons.menu = { touch: null, press: false };
+        this.buttons.X = { touch: false, press: false };
+        this.buttons.Y = { touch: false, press: false };
+        this.buttons.Menu = { touch: null, press: false };
     }
 }
 
 class RightControllerInfo extends ControllerInfo {
     constructor() {
         super();
-        this.buttons.a = { touch: false, press: false };
-        this.buttons.b = { touch: false, press: false };
-        this.buttons.system = { touch: null, press: false };
+        this.buttons.A = { touch: false, press: false };
+        this.buttons.B = { touch: false, press: false };
+        this.buttons.System = { touch: null, press: false };
     }
 }
