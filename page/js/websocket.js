@@ -80,7 +80,10 @@ function connect() {
     };
 
     ws.onmessage = (event) => {
-        console.log('Message from server:', event.data);
+        const msg = event.data;
+        if (msg.type == "rumble")
+            console.log("Rumble: " + msg.data);
+        else console.log('Message from server:', event.data);
     };
 }
 
@@ -89,6 +92,7 @@ function disconnect() {
         ws.close(1000, 'Client disconnected');
     }
 }
+
 
 connectButton?.addEventListener('click', () => {
     if (isWSConnected) {
