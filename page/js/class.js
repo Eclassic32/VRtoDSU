@@ -1,4 +1,4 @@
-import { setBoolValue, setRangeValue } from './elemets.js';
+import { setBoolValue, setRangeValue } from './elements.js';
 export { HeadsetInfo, LeftControllerInfo, RightControllerInfo };
 
 class VRInfo {

@@ -1,6 +1,11 @@
 import { headsetInfo, leftControllerInfo, rightControllerInfo } from './main.js';
 import { getControllerConfig, disableControllerConfigUpload } from './controllerConfig.js';
-import { TrackerElements } from './elemets.js';
+import { TrackerElements } from './elements.js';
+import { sendAllControllerData } from './dsu.js';
+import { isWSConnected } from './websocket.js';
+
+export { headsetInfo, leftControllerInfo, rightControllerInfo };
+
 // XR globals.
 let xrButton = document.getElementById('xr-button');
 let xrSession = null;
@@ -352,6 +357,11 @@ function onXRFrame(time, frame) {
     
     // Update time for next frame's calculations
     prevTime = performance.now();
+
+    // Send controller data via DSU protocol if WebSocket is connected
+    if (isWSConnected) {
+        sendAllControllerData();
+    }
 
     // Getting the pose may fail if, for example, tracking is lost. So we
     // have to check to make sure that we got a valid pose before attempting
