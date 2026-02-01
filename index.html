@@ -2,67 +2,268 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  
-    <title>VRtoDSU</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>VR to DSU - Motion Controller Bridge</title>
     <style>
-        .btn-unknown {
-            color: gray;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-        .btn-notActive {
-            color: red;
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
         }
-        .btn-active {
-            color: green;
-            font-weight: bold;
+        
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(100, 200, 255, 0.5);
+        }
+        
+        .subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-row:last-child {
+            border-bottom: none;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        
+        .status-connected { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
+        .status-disconnected { background: #f87171; }
+        .status-waiting { background: #fbbf24; animation: pulse 1s infinite; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .data-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .data-box h3 {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        
+        .data-value {
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+            color: #4ade80;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .mode-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .mode-btn.active {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.2);
+        }
+        
+        .warning {
+            background: rgba(251, 191, 36, 0.2);
+            border: 1px solid #fbbf24;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            max-width: 500px;
+        }
+        
+        #vrView {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        .instructions {
+            max-width: 500px;
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 10px 0;
+            color: #aaa;
         }
     </style>
 </head>
 <body>
-    <div class="flex flex-col min-h-screen bg-gray-900 text-white items-center justify-center p-4 gap-4">
-        <div class="flex flex-row w-full max-w-7xl gap-4">
-            <!-- Host Info Box -->
-            <div class="flex flex-col justify-center bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2 flex-1">
-                <div class="flex items-center justify-between gap-3">
-                    Host Status: 
-                    <span id="host-status" class="font-bold">Disconnected</span>
-                </div>
-                <div class="flex items-center justify-between gap-3">
-                    Host IP: 
-                    <input type="text" name="host-ip" id="host-ip" class="bg-gray-700 rounded px-2 py-1" value="" placeholder="wss://localhost:12345">
-                </div>
-            </div>
-
-            <!-- Buttons -->
-            <div class="flex flex-col gap-3 w-full flex-1">
-                <button id="connect-button" class="rounded-full bg-gray-800 px-6 py-3 hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full">Connect to Host</button>
-                <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full" disabled>XR not found</button>
-
-            </div>
-
-            <!-- Controller Config Info Box -->
-            <div class="flex flex-col gap-3 flex-1">
-                <div class="flex flex-col justify-center bg-gray-800 bg-opacity-50 rounded-lg p-3 space-y-2">
-                    <div class="flex items-center justify-between gap-3">
-                        Controller Config:
-                        <span id="controller-config-file" class="line-clamp-2">[Config Name]</span>
-                    </div>
-                </div>
-                <div class="flex flex-row gap-2">
-                    <input type="button" value="Upload Controller Config" id="upload-controller-config-button" name="upload-controller-config" class="rounded-full bg-gray-800 px-6 py-3 hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full">
-                    <input type="file" id="upload-controller-config-file" accept=".json,application/json" style="display:none">
-
-                    <button id="xr-button" class="rounded-full bg-gray-800 px-6 py-3 hover:bg-gray-700 hover:cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors w-full" disabled>Calibrate</button>
-                </div>
+    <h1>🎮 VR to DSU</h1>
+    <p class="subtitle">Meta Quest Motion Controller Bridge</p>
+    
+    <div id="notSupported" class="warning" style="display: none;">
+        <strong>⚠️ WebXR Not Supported</strong><br>
+        Your browser doesn't support WebXR. Please use Meta Quest Browser or a WebXR-compatible browser.
+    </div>
+    
+    <div id="httpsWarning" class="warning" style="display: none;">
+        <strong>⚠️ HTTPS Required</strong><br>
+        WebXR requires a secure connection. The page needs to be served over HTTPS or localhost.
+    </div>
+    
+    <div class="status-card">
+        <div class="status-row" style="flex-direction: column; align-items: stretch;">
+            <label style="margin-bottom: 8px;">🖥️ PC Server Address:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="serverIP" placeholder="192.168.1.100" 
+                    style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; font-size: 16px;">
+                <input type="number" id="serverPort" value="3000" 
+                    style="width: 80px; padding: 10px; border-radius: 8px; border: none; background: rgba(0,0,0,0.3); color: white; font-size: 16px;">
+                <button id="connectBtn" class="btn" style="padding: 10px 20px; margin: 0;">Connect</button>
             </div>
         </div>
-
-        <div id="info-columns" class="flex flex-col lg:flex-row gap-4 w-full max-w-7xl">
-            
+        <div class="status-row">
+            <span><span id="wsIndicator" class="status-indicator status-disconnected"></span>Server Connection</span>
+            <span id="wsStatus">Disconnected</span>
+        </div>
+        <div class="status-row">
+            <span><span id="xrIndicator" class="status-indicator status-disconnected"></span>VR Session</span>
+            <span id="xrStatus">Not Started</span>
+        </div>
+        <div class="status-row">
+            <span><span id="ctrlIndicator" class="status-indicator status-disconnected"></span>Controllers</span>
+            <span id="ctrlStatus">Not Detected</span>
         </div>
     </div>
-    <script type="module" src="page/js/main.js"></script>
+    
+    <div class="mode-selector">
+        <button class="mode-btn active" data-mode="combined">Combined (1 DSU slot)</button>
+        <button class="mode-btn" data-mode="separate">Separate (2 DSU slots)</button>
+    </div>
+    
+    <div>
+        <button id="startBtn" class="btn">🥽 Start VR Session</button>
+        <button id="stopBtn" class="btn btn-stop" style="display: none;">⏹️ Stop</button>
+    </div>
+    
+    <div class="status-card">
+        <h3 style="margin-bottom: 15px;">📊 Live Data</h3>
+        <div class="data-grid">
+            <div class="data-box">
+                <h3>Left Controller</h3>
+                <div id="leftData" class="data-value">No data</div>
+            </div>
+            <div class="data-box">
+                <h3>Right Controller</h3>
+                <div id="rightData" class="data-value">No data</div>
+            </div>
+            <div class="data-box">
+                <h3>Accelerometer (L)</h3>
+                <div id="accelData" class="data-value">X: 0.00 Y: 0.00 Z: 0.00</div>
+            </div>
+            <div class="data-box">
+                <h3>Gyroscope (L)</h3>
+                <div id="gyroData" class="data-value">X: 0.00 Y: 0.00 Z: 0.00</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>📋 Setup Instructions</h3>
+        <ol>
+            <li>Make sure the server is running on your PC</li>
+            <li>Connect your Quest to the same network as your PC</li>
+            <li>Click "Start VR Session" and put on your headset</li>
+            <li>Point controllers and grant permissions when prompted</li>
+            <li>Configure Dolphin/Cemu to use DSU at <code>YOUR_PC_IP:26760</code></li>
+        </ol>
+    </div>
+    
+    <canvas id="vrView"></canvas>
+    
+    <script src="app.js"></script>
 </body>
 </html>
