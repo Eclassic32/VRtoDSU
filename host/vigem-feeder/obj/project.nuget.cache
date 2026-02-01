@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "SjpKBrxnsKk=",
+  "success": true,
+  "projectFilePath": "Q:\\Projects\\VRtoDSU\\host\\vigem-feeder\\vigem-feeder.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pc\\.nuget\\packages\\nefarius.vigem.client\\1.21.256\\nefarius.vigem.client.1.21.256.nupkg.sha512"
+  ],
+  "logs": []
+}

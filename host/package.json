@@ -1,12 +1,16 @@
 {
   "name": "vrtodsu-host",
   "version": "1.0.0",
-  "description": "WebSocket server to receive VRtoDSU messages",
+  "description": "WebXR to Cemuhook DSU Protocol bridge",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "ws": "^8.14.2"
+    "koffi": "^2.15.1",
+    "node-forge": "^1.3.3",
+    "selfsigned": "^5.5.0",
+    "ws": "^8.14.0"
   }
 }
