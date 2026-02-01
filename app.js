@@ -71,7 +71,7 @@ class VRtoDSU {
     
     manualConnect() {
         const ip = document.getElementById('serverIP').value.trim();
-        const port = document.getElementById('serverPort').value.trim() || '3000';
+        const port = document.getElementById('serverPort').value.trim() || '3443';
         
         if (!ip) {
             alert('Please enter your PC\'s IP address');
@@ -82,7 +82,9 @@ class VRtoDSU {
         localStorage.setItem('vrtodsu_server_ip', ip);
         localStorage.setItem('vrtodsu_server_port', port);
         
-        this.serverAddress = `ws://${ip}:${port}`;
+        // Use wss:// for secure connection (required from HTTPS pages like GitHub Pages)
+        const protocol = (location.protocol === 'https:') ? 'wss' : 'ws';
+        this.serverAddress = `${protocol}://${ip}:${port}`;
         this.connectWebSocket();
     }
     
