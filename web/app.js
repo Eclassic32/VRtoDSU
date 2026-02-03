@@ -24,6 +24,10 @@ class VRtoDSU {
             right: { lastPos: null, lastTime: 0, velocity: { x: 0, y: 0, z: 0 } }
         };
         
+        // Smoothing filters for motion data
+        this.accelSmooth = { left: null, right: null };
+        this.gyroSmooth = { left: null, right: null };
+        
         this.init();
     }
     
@@ -273,31 +277,83 @@ class VRtoDSU {
         const position = pose.transform.position;
         const orientation = pose.transform.orientation;
         
-        // Estimate acceleration from position changes
-        const estimator = this.velocityEstimator[hand];
-        let accel = { x: 0, y: 0, z: 0 };
+        // Calculate acceleration in controller's local frame
+        // DSU expects acceleration WITH gravity, in the controller's reference frame
+        // When controller is flat (screen up), gravity should be ~(0, 1, 0) in g's
         
+        // Gravity vector in world space (pointing down)
+        const gravityWorld = { x: 0, y: -9.8, z: 0 };
+        
+        // Rotate gravity into controller's local frame using quaternion
+        // To rotate a vector by quaternion: v' = q * v * q^-1
+        // For unit quaternion, q^-1 = conjugate
+        const q = orientation;
+        
+        // Quaternion conjugate (inverse for unit quaternion)
+        const qConj = { x: -q.x, y: -q.y, z: -q.z, w: q.w };
+        
+        // Rotate gravity: first compute q * gravity (as pure quaternion with w=0)
+        // q * v where v = (gx, gy, gz, 0)
+        const qv = {
+            w: -q.x * gravityWorld.x - q.y * gravityWorld.y - q.z * gravityWorld.z,
+            x: q.w * gravityWorld.x + q.y * gravityWorld.z - q.z * gravityWorld.y,
+            y: q.w * gravityWorld.y + q.z * gravityWorld.x - q.x * gravityWorld.z,
+            z: q.w * gravityWorld.z + q.x * gravityWorld.y - q.y * gravityWorld.x
+        };
+        
+        // Then compute (q * v) * qConj
+        const gravityLocal = {
+            x: qv.w * qConj.x + qv.x * qConj.w + qv.y * qConj.z - qv.z * qConj.y,
+            y: qv.w * qConj.y - qv.x * qConj.z + qv.y * qConj.w + qv.z * qConj.x,
+            z: qv.w * qConj.z + qv.x * qConj.y - qv.y * qConj.x + qv.z * qConj.w
+        };
+        
+        // Negate because accelerometer measures reaction to gravity (upward force)
+        // and convert to g's
+        let accel = {
+            x: -gravityLocal.x / 9.8,
+            y: -gravityLocal.y / 9.8,
+            z: -gravityLocal.z / 9.8
+        };
+        
+        // Add linear acceleration from movement
+        const estimator = this.velocityEstimator[hand];
         if (estimator.lastPos && estimator.lastTime) {
-            const dt = (time - estimator.lastTime) / 1000; // seconds
-            if (dt > 0 && dt < 0.1) { // Reasonable delta time
-                // Calculate velocity
+            const dt = (time - estimator.lastTime) / 1000;
+            if (dt > 0.001 && dt < 0.1) {
                 const newVel = {
                     x: (position.x - estimator.lastPos.x) / dt,
                     y: (position.y - estimator.lastPos.y) / dt,
                     z: (position.z - estimator.lastPos.z) / dt
                 };
                 
-                // Calculate acceleration (velocity change)
-                accel = {
-                    x: (newVel.x - estimator.velocity.x) / dt,
-                    y: (newVel.y - estimator.velocity.y) / dt + 9.8, // Add gravity
-                    z: (newVel.z - estimator.velocity.z) / dt
-                };
-                
-                // Clamp to reasonable values and convert to g's
-                accel.x = Math.max(-16, Math.min(16, accel.x / 9.8));
-                accel.y = Math.max(-16, Math.min(16, accel.y / 9.8));
-                accel.z = Math.max(-16, Math.min(16, accel.z / 9.8));
+                if (estimator.velocity) {
+                    // Calculate linear acceleration in world space
+                    const linearAccelWorld = {
+                        x: (newVel.x - estimator.velocity.x) / dt,
+                        y: (newVel.y - estimator.velocity.y) / dt,
+                        z: (newVel.z - estimator.velocity.z) / dt
+                    };
+                    
+                    // Rotate linear acceleration to controller's local frame
+                    const lav = {
+                        w: -q.x * linearAccelWorld.x - q.y * linearAccelWorld.y - q.z * linearAccelWorld.z,
+                        x: q.w * linearAccelWorld.x + q.y * linearAccelWorld.z - q.z * linearAccelWorld.y,
+                        y: q.w * linearAccelWorld.y + q.z * linearAccelWorld.x - q.x * linearAccelWorld.z,
+                        z: q.w * linearAccelWorld.z + q.x * linearAccelWorld.y - q.y * linearAccelWorld.x
+                    };
+                    const linearAccelLocal = {
+                        x: lav.w * qConj.x + lav.x * qConj.w + lav.y * qConj.z - lav.z * qConj.y,
+                        y: lav.w * qConj.y - lav.x * qConj.z + lav.y * qConj.w + lav.z * qConj.x,
+                        z: lav.w * qConj.z + lav.x * qConj.y - lav.y * qConj.x + lav.z * qConj.w
+                    };
+                    
+                    // Add to gravity-based acceleration (with dampening to reduce noise)
+                    const linearScale = 0.3; // Reduce noise from position-based estimation
+                    accel.x += linearAccelLocal.x / 9.8 * linearScale;
+                    accel.y += linearAccelLocal.y / 9.8 * linearScale;
+                    accel.z += linearAccelLocal.z / 9.8 * linearScale;
+                }
                 
                 estimator.velocity = newVel;
             }
@@ -305,6 +361,20 @@ class VRtoDSU {
         
         estimator.lastPos = { x: position.x, y: position.y, z: position.z };
         estimator.lastTime = time;
+        
+        // Clamp acceleration to reasonable range
+        accel.x = Math.max(-4, Math.min(4, accel.x));
+        accel.y = Math.max(-4, Math.min(4, accel.y));
+        accel.z = Math.max(-4, Math.min(4, accel.z));
+        
+        // Apply smoothing to reduce noise
+        if (this.accelSmooth[hand]) {
+            const alpha = 0.3; // Smoothing factor (0 = no change, 1 = no smoothing)
+            accel.x = this.accelSmooth[hand].x * (1 - alpha) + accel.x * alpha;
+            accel.y = this.accelSmooth[hand].y * (1 - alpha) + accel.y * alpha;
+            accel.z = this.accelSmooth[hand].z * (1 - alpha) + accel.z * alpha;
+        }
+        this.accelSmooth[hand] = { ...accel };
         
         // Extract angular velocity from quaternion changes
         // Note: WebXR doesn't directly provide angular velocity, so we estimate
@@ -390,37 +460,77 @@ class VRtoDSU {
         if (!lastQ || !lastT) return { x: 0, y: 0, z: 0 };
         
         const dt = (time - lastT) / 1000;
-        if (dt <= 0 || dt > 0.1) return { x: 0, y: 0, z: 0 };
+        // Require minimum dt to avoid division spikes, and max to avoid stale data
+        // Use 1ms minimum (Quest runs at 72Hz = ~14ms per frame, so this should be fine)
+        if (dt < 0.001 || dt > 0.1) {
+            return this.gyroSmooth[hand] ? { ...this.gyroSmooth[hand] } : { x: 0, y: 0, z: 0 };
+        }
         
-        // Proper quaternion to angular velocity conversion
-        // Angular velocity ω = 2 * q' * q^(-1)
-        // Where q' is the derivative of q, and q^(-1) is the conjugate for unit quaternions
+        // Handle quaternion double-cover: q and -q represent the same rotation
+        // If dot product is negative, negate one quaternion to take shortest path
+        let qx = orientation.x, qy = orientation.y, qz = orientation.z, qw = orientation.w;
+        const dot = lastQ.x * qx + lastQ.y * qy + lastQ.z * qz + lastQ.w * qw;
+        if (dot < 0) {
+            qx = -qx;
+            qy = -qy;
+            qz = -qz;
+            qw = -qw;
+        }
         
-        // Compute quaternion derivative (dq/dt)
-        const dq = {
-            x: (orientation.x - lastQ.x) / dt,
-            y: (orientation.y - lastQ.y) / dt,
-            z: (orientation.z - lastQ.z) / dt,
-            w: (orientation.w - lastQ.w) / dt
-        };
+        // Compute quaternion difference: dq = q_new * q_old^(-1)
+        // For small rotations, the xyz components of dq approximate half the rotation vector
+        const qOldConjX = -lastQ.x, qOldConjY = -lastQ.y, qOldConjZ = -lastQ.z, qOldConjW = lastQ.w;
         
-        // Conjugate of current quaternion (for unit quaternion, conjugate = inverse)
-        const qConj = {
-            x: -orientation.x,
-            y: -orientation.y,
-            z: -orientation.z,
-            w: orientation.w
-        };
+        // Quaternion multiplication: q * qOldConj
+        const dqW = qw * qOldConjW - qx * qOldConjX - qy * qOldConjY - qz * qOldConjZ;
+        const dqX = qw * qOldConjX + qx * qOldConjW + qy * qOldConjZ - qz * qOldConjY;
+        const dqY = qw * qOldConjY - qx * qOldConjZ + qy * qOldConjW + qz * qOldConjX;
+        const dqZ = qw * qOldConjZ + qx * qOldConjY - qy * qOldConjX + qz * qOldConjW;
         
-        // Quaternion multiplication: 2 * dq * qConj
-        // Result's xyz components give angular velocity
-        const gyro = {
-            x: 2 * (dq.w * qConj.x + dq.x * qConj.w + dq.y * qConj.z - dq.z * qConj.y),
-            y: 2 * (dq.w * qConj.y - dq.x * qConj.z + dq.y * qConj.w + dq.z * qConj.x),
-            z: 2 * (dq.w * qConj.z + dq.x * qConj.y - dq.y * qConj.x + dq.z * qConj.w)
-        };
+        // For small angles, angular velocity ≈ 2 * dq.xyz / dt
+        let gyroX = 2 * dqX / dt;
+        let gyroY = 2 * dqY / dt;
+        let gyroZ = 2 * dqZ / dt;
         
-        return gyro;
+        // Fix axis signs to match DS4/DSU coordinate system
+        gyroY = -gyroY;
+        gyroZ = -gyroZ;
+        
+        // Check for NaN or Infinity FIRST
+        if (!Number.isFinite(gyroX)) gyroX = 0;
+        if (!Number.isFinite(gyroY)) gyroY = 0;
+        if (!Number.isFinite(gyroZ)) gyroZ = 0;
+        
+        // Clamp to reasonable range (max ~5 rev/sec = 31 rad/s)
+        const maxGyro = 31;
+        gyroX = Math.max(-maxGyro, Math.min(maxGyro, gyroX));
+        gyroY = Math.max(-maxGyro, Math.min(maxGyro, gyroY));
+        gyroZ = Math.max(-maxGyro, Math.min(maxGyro, gyroZ));
+        
+        // Apply deadzone to filter out tiny jittery values
+        const deadzone = 0.1; // radians/sec
+        if (Math.abs(gyroX) < deadzone) gyroX = 0;
+        if (Math.abs(gyroY) < deadzone) gyroY = 0;
+        if (Math.abs(gyroZ) < deadzone) gyroZ = 0;
+        
+        // Apply smoothing to reduce noise
+        const prev = this.gyroSmooth[hand];
+        if (prev) {
+            const alpha = 0.5; // Smoothing factor
+            gyroX = prev.x * (1 - alpha) + gyroX * alpha;
+            gyroY = prev.y * (1 - alpha) + gyroY * alpha;
+            gyroZ = prev.z * (1 - alpha) + gyroZ * alpha;
+        }
+        
+        // Final cleanup: snap tiny values to zero (prevents floating point dust like 1e-15)
+        if (Math.abs(gyroX) < 0.001) gyroX = 0;
+        if (Math.abs(gyroY) < 0.001) gyroY = 0;
+        if (Math.abs(gyroZ) < 0.001) gyroZ = 0;
+        
+        const result = { x: gyroX, y: gyroY, z: gyroZ };
+        this.gyroSmooth[hand] = result;
+        
+        return result;
     }
     
     getButtons1(left, right) {

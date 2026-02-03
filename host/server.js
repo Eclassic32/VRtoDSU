@@ -18,6 +18,12 @@ const HTTPS_PORT = 3443;
 const SERVER_ID = Math.floor(Math.random() * 0xFFFFFFFF);
 const VIGEM_ENABLED = true; // Set to false to disable virtual controller
 
+// Default client to always send data to (Dolphin's default DSU port)
+const DEFAULT_DSU_CLIENT = {
+    address: '127.0.0.1',
+    port: 26760  // We send back to the same port we listen on
+};
+
 // ============ DSU Protocol Constants ============
 const PROTOCOL_VERSION = 1001;
 const MSG_TYPE_VERSION = 0x100000;
@@ -58,8 +64,9 @@ function createControllerState(slot) {
     };
 }
 
-// Active clients requesting data
-const activeClients = new Map();
+// Track the DSU client address (set when we receive any message from them)
+let dsuClientAddress = null;
+let dsuClientPort = null;
 
 // ============ ViGEm Virtual Controller ============
 let vigemProcess = null;
@@ -238,10 +245,7 @@ function buildControllerDataPacket(slot) {
     payload.writeUInt8(btn1, offset++);
     payload.writeUInt8(btn2, offset++);
     
-    // Debug: log when buttons are non-zero
-    if (btn1 || btn2) {
-        console.log(`📦 Packet slot ${slot}: buttons1=0x${btn1.toString(16)} buttons2=0x${btn2.toString(16)} at offsets 16,17`);
-    }
+
     
     // Home & Touch buttons (2 bytes)
     payload.writeUInt8(0, offset++);
@@ -272,9 +276,7 @@ function buildControllerDataPacket(slot) {
     payload.writeUInt8(analogA, offset++); // A (Cross)
     payload.writeUInt8(analogX, offset++); // X (Square)
     
-    if (btn2 & 0xF0) {
-        console.log(`📦 Analog buttons: Y=${analogY} B=${analogB} A=${analogA} X=${analogX}`);
-    }
+
     
     // Analog triggers (4 bytes)
     payload.writeUInt8(controller.analogR1 || 0, offset++); // R1
@@ -327,24 +329,28 @@ udpServer.on('message', (msg, rinfo) => {
     if (magic !== 'DSUC') return;
     
     const msgType = msg.readUInt32LE(16);
-    const clientKey = `${rinfo.address}:${rinfo.port}`;
     
-    console.log(`📨 DSU request from ${clientKey}: type=0x${msgType.toString(16)}`);
+    // Remember the client address - we'll always send data to them
+    // Only log on first contact, silently update port changes
+    const isNewAddress = !dsuClientAddress || dsuClientAddress !== rinfo.address;
+    dsuClientAddress = rinfo.address;
+    dsuClientPort = rinfo.port;
+    if (isNewAddress) {
+        console.log(`📨 DSU client connected: ${rinfo.address}`);
+    }
     
+    // Respond to protocol messages (but no need to track subscriptions anymore)
     switch (msgType) {
         case MSG_TYPE_VERSION:
-            console.log('   → Sending version response');
             const versionResp = buildVersionResponse();
             udpServer.send(versionResp, rinfo.port, rinfo.address);
             break;
             
         case MSG_TYPE_PORTS:
             const numPorts = msg.readInt32LE(20);
-            console.log(`   → Port info request for ${numPorts} ports`);
             for (let i = 0; i < Math.min(numPorts, 4); i++) {
                 const slot = msg.readUInt8(24 + i);
                 if (slot < 4) {
-                    console.log(`      Slot ${slot}: connected=${controllers[slot].connected}`);
                     const resp = buildControllerInfoResponse(slot);
                     udpServer.send(resp, rinfo.port, rinfo.address);
                 }
@@ -352,32 +358,15 @@ udpServer.on('message', (msg, rinfo) => {
             break;
             
         case MSG_TYPE_DATA:
-            // Register client for data streaming
-            const regFlags = msg.readUInt8(20);
-            console.log(`   → Data subscription request, flags=${regFlags}`);
-            
-            if (regFlags === 0) {
-                // Subscribe to all controllers
-                for (let i = 0; i < 4; i++) {
-                    activeClients.set(`${clientKey}:${i}`, {
-                        address: rinfo.address,
-                        port: rinfo.port,
-                        slot: i,
-                        lastRequest: Date.now()
-                    });
-                }
-                console.log('      Subscribed to all slots');
-            } else if (regFlags & 1) {
-                // Slot-based registration
-                const slot = msg.readUInt8(21);
-                if (slot < 4) {
-                    activeClients.set(`${clientKey}:${slot}`, {
-                        address: rinfo.address,
-                        port: rinfo.port,
-                        slot,
-                        lastRequest: Date.now()
-                    });
-                    console.log(`      Subscribed to slot ${slot}`);
+            // Client is requesting data - send an immediate burst to the new port
+            // This ensures no gap when client switches ports
+            for (let slot = 0; slot < 4; slot++) {
+                const controller = controllers[slot];
+                if (controller.connected) {
+                    const packet = buildControllerDataPacket(slot);
+                    if (packet) {
+                        udpServer.send(packet, rinfo.port, rinfo.address);
+                    }
                 }
             }
             break;
@@ -393,22 +382,15 @@ udpServer.bind(DSU_PORT);
 
 // ============ Data Streaming Loop ============
 setInterval(() => {
-    const now = Date.now();
-    
-    // Clean up old clients (5 second timeout)
-    for (const [key, client] of activeClients) {
-        if (now - client.lastRequest > 5000) {
-            activeClients.delete(key);
-        }
-    }
-    
-    // Send data to active clients
-    for (const [key, client] of activeClients) {
-        const controller = controllers[client.slot];
-        if (controller.connected) {
-            const packet = buildControllerDataPacket(client.slot);
-            if (packet) {
-                udpServer.send(packet, client.port, client.address);
+    // If we have a known DSU client, always send data (no subscription required)
+    if (dsuClientAddress && dsuClientPort) {
+        for (let slot = 0; slot < 4; slot++) {
+            const controller = controllers[slot];
+            if (controller.connected) {
+                const packet = buildControllerDataPacket(slot);
+                if (packet) {
+                    udpServer.send(packet, dsuClientPort, dsuClientAddress);
+                }
             }
         }
     }
@@ -561,10 +543,7 @@ function handleWebSocket(ws) {
                         const ctrl = controllers[cSlot];
                         ctrl.lastUpdate = Date.now();
                         
-                        // Debug: log button data when buttons are pressed
-                        if (data.buttons1 || data.buttons2) {
-                            console.log(`🔘 Slot ${cSlot}: buttons1=0x${data.buttons1?.toString(16) || '0'} buttons2=0x${data.buttons2?.toString(16) || '0'} buttonA=${data.buttonA} buttonB=${data.buttonB}`);
-                        }
+
                         
                         // Motion data (convert to DSU coordinate system)
                         if (data.accel) {
